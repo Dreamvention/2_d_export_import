@@ -1,0 +1,74 @@
+{
+    "codename": "d_export_import",
+    "version": "2.0.0",
+    "name": "Export Import",
+    "description": "This is the base for your tipical module. Use  this as a guide to make an awesome module.",
+    "index": "extension/module/d_export_import",
+    "author": {
+        "name": "Shopunity",
+        "email": "info@shopunity.com",
+        "url": "https://shopunity.net/"
+    },
+    "opencart_version": [
+        "2.0.0.0",
+        "2.0.1.1",
+        "2.0.1.1",
+        "2.0.2.0",
+        "2.0.3.1",
+        "2.1.0.1",
+        "2.1.0.2",
+        "2.2.0.0",
+        "2.3.0.2"
+    ],
+    "mbooth_version": "^4.0.0",
+    "type": "module",
+    "license": {
+        "type": "free",
+        "url": "https://shopunity.net/licenses/free"
+    },
+    "install": {
+        "url": "extension/module/install&extension=d_export_import"
+    },
+    "uninstall": {
+        "url": "extension/module/uninstall&extension=d_export_import"
+    },
+    "support": {
+        "email": "support@shopunity.com",
+        "url": "https://shopunity.net/"
+    },
+    "required": {
+        "d_shopunity": ">=3.1.0",
+        "d_riot": ">= 3.5.0"
+    },
+    "files": [
+
+        "admin/controller/extension/module/d_export_import.php",
+        "admin/language/en-gb/extension/module/d_export_import.php",
+        "admin/language/english/extension/module/d_export_import.php",
+        "admin/model/extension/module/d_export_import.php",
+
+        "system/config/d_export_import.php",
+        "system/library/xlsxwriter.class.php",
+        "system/library/d_shopunity/extension/d_export_import.json"
+    ],
+    "dirs": [
+        "admin/controller/extension/d_export_import",
+        "admin/controller/extension/d_export_import_module",
+        "admin/language/en-gb/extension/d_export_import",
+        "admin/language/english/extension/d_export_import",
+        "admin/language/en-gb/extension/d_export_import_module",
+        "admin/language/english/extension/d_export_import_module",
+        "admin/model/extension/d_export_import",
+        "admin/model/extension/d_export_import_module",
+        "admin/view/javascript/d_export_import",
+        "admin/view/template/extension/d_export_import",
+        "system/config/d_export_import",
+        "system/library/SpreadsheetReader"
+    ],
+    "changelog": [
+        {
+            "varsion":"2.0.0",
+            "change": "First version"
+        }
+    ]
+}
