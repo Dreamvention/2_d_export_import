@@ -41,6 +41,7 @@ class ControllerExtensionDExportImportSetting extends Controller {
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
 
             $this->model_setting_setting->editSetting($this->codename, $this->request->post, $this->store_id);
+
             $this->session->data['success'] = $this->language->get('text_success');
 
             $this->response->redirect($this->url->link($this->route, 'token=' . $this->session->data['token'].'&type=module', 'SSL'));
@@ -157,6 +158,11 @@ class ControllerExtensionDExportImportSetting extends Controller {
 
         foreach($this->error as $key => $error){
             $data['error'][$key] = $error;
+        }
+
+        if(isset($this->session->data['success'])){
+            $data['success'] = $this->session->data['success'];
+            unset($this->session->data['success']);
         }
 
         $data['tabs'] = $this->{'model_extension_module_'.$this->codename}->getTabs('setting');

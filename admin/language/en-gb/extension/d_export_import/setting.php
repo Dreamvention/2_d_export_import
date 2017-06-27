@@ -1,5 +1,6 @@
 <?php
 $_['text_title']           = 'Setting';
+$_['text_success']         = 'Success: You have modified Export/Import!';
 
 $_['entry_limit']          = 'Number of items in one file.';
 $_['entry_limit_step']     = 'Restricting elements one step';
