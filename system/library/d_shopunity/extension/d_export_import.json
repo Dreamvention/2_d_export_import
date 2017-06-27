@@ -47,22 +47,21 @@
         "admin/language/english/extension/module/d_export_import.php",
         "admin/model/extension/module/d_export_import.php",
 
+        "admin/language/english/extension/d_export_import_module/product.php",
+        "admin/language/en-gb/extension/d_export_import_module/product.php",
+
         "system/config/d_export_import.php",
+        "system/config/d_export_import/product.php",
         "system/library/xlsxwriter.class.php",
         "system/library/d_shopunity/extension/d_export_import.json"
     ],
     "dirs": [
         "admin/controller/extension/d_export_import",
-        "admin/controller/extension/d_export_import_module",
         "admin/language/en-gb/extension/d_export_import",
         "admin/language/english/extension/d_export_import",
-        "admin/language/en-gb/extension/d_export_import_module",
-        "admin/language/english/extension/d_export_import_module",
         "admin/model/extension/d_export_import",
-        "admin/model/extension/d_export_import_module",
         "admin/view/javascript/d_export_import",
         "admin/view/template/extension/d_export_import",
-        "system/config/d_export_import",
         "system/library/SpreadsheetReader"
     ],
     "changelog": [
