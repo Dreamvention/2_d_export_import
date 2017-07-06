@@ -277,7 +277,7 @@ class ModelExtensionDExportImportExport extends Controller {
 
         $columns_width = null;
 
-        $header_styles = array('fill'=> '#17375E', 'color' => '#fff', 'halign' => 'left', 'valign' => 'center');
+        $header_styles = array('fill'=> '#00B050', 'color' => '#fff', 'halign' => 'left', 'valign' => 'center');
 
         $this->writer->writeSheetRow($setting['name'], $results, $header_styles);
 
