@@ -51,8 +51,8 @@ class ControllerExtensionModuleDExportImport extends Controller {
             $this->response->redirect($this->url->link($this->route.'/required', 'codename=d_shopunity&token='.$this->session->data['token'], 'SSL'));
         }
         
-        $this->load->model('d_shopunity/mbooth');
-        $this->model_d_shopunity_mbooth->validateDependencies($this->codename);
+        $this->load->model('extension/d_shopunity/mbooth');
+        $this->model_extension_d_shopunity_mbooth->validateDependencies($this->codename);
         
         $this->load->controller('extension/'.$this->codename.'/excel');
         
@@ -60,8 +60,8 @@ class ControllerExtensionModuleDExportImport extends Controller {
     
     public function install() {
         if($this->d_shopunity){
-            $this->load->model('d_shopunity/mbooth');
-            $this->model_d_shopunity_mbooth->installDependencies($this->codename);
+            $this->load->model('extension/d_shopunity/mbooth');
+            $this->model_extension_d_shopunity_mbooth->installDependencies($this->codename);
         }
 
         $this->load->model('user/user_group');

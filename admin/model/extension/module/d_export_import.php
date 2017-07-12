@@ -7,6 +7,15 @@ class ModelExtensionModuleDExportImport extends Model {
 
     private $codename = 'd_export_import';
 
+    public function checkCompleteVersion(){
+        $return = false;
+        if(!file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_export_import_pro.json')){
+            $return = true; 
+        }
+
+        return $return;
+    }
+
     public function getRiotTags(){
         $result = array();
         $files = glob(DIR_APPLICATION . 'view/template/extension/'.$this->codename.'/tags/*.tag', GLOB_BRACE);
@@ -73,6 +82,10 @@ class ModelExtensionModuleDExportImport extends Model {
     public function prepareTabs($tabs, $active){
         $data['tabs'] = array();
         $icons =array('excel'=> 'fa fa-file-excel-o', 'setting' => 'fa fa-cog');
+
+        $data['text_complete_version'] = $this->language->get('text_complete_version');
+
+        $data['notify'] = $this->checkCompleteVersion();
 
         foreach ($tabs as $tab) {
             $this->load->language('extension/'.$this->codename.'/'.$tab);

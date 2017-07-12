@@ -37,59 +37,69 @@
             <div class="panel-body">
                 <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form-excel" class="form-horizontal">
                     <?php echo $tabs; ?>
-                    <div class="form-group required">
-                        <label class="control-label col-sm-2"><?php echo $entry_language; ?></label>
-                        <div class="col-sm-10">
-                            <select class="form-control" name="language_id">
-                                <?php foreach($languages as $language) { ?>
-                                <option value="<?php echo $language['language_id'] ?>"><?php echo $language['name']; ?></option>
-                                <?php } ?>
-                            </select>
+                    <div class="row">
+                        <div class="col-sm-<?php echo $notify?'9':'12' ?>">
+                            <div class="form-group required">
+                                <label class="control-label col-sm-2"><?php echo $entry_language; ?></label>
+                                <div class="col-sm-10">
+                                    <select class="form-control" name="language_id">
+                                        <?php foreach($languages as $language) { ?>
+                                        <option value="<?php echo $language['language_id'] ?>"><?php echo $language['name']; ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <input type="file" name="import" style="display: none;" accept="application/zip,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+                            <input type="hidden" name="recipient" value=""/>
+                            <table class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <td class="text-left">
+                                            <?php echo $column_name; ?>
+                                        </td>
+                                        <td class="text-left">
+                                            <?php echo $column_description; ?>
+                                        </td>
+                                        <td class="text-center">
+                                            <?php echo $column_action; ?>
+                                        </td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach($modules as $key => $module) { ?>
+                                    <tr>
+                                        <td class="text-left">
+                                            <?php echo $module['title']; ?>
+                                        </td>
+                                        <td class="text-left">
+                                            <?php echo $module['description']; ?>
+                                        </td>
+                                        <td class="text-center">
+                                            <a id="button-export" class="btn btn-default" data-value="<?php echo $key; ?>"><i class="fa fa-download"></i> <?php echo $button_export; ?></a>
+                                            <a id="button-import" class="btn btn-default" data-value="<?php echo $key; ?>"><i class="fa fa-upload"></i> <?php echo $button_import; ?></a>
+                                            <a id="button-setting" class="btn btn-default" data-value="<?php echo $key; ?>"><i class="fa fa-filter"></i> <?php echo $button_filter; ?></a>
+                                        </td>
+                                    </tr>
+                                    <?php }?>
+                                </tbody>
+                            </table>
+                            <ei_progress_modal></ei_progress_modal>
+                            <ei_setting_modal></ei_setting_modal>
                         </div>
+                        <?php if($notify) { ?>
+                        <div class="col-sm-3">
+                            <div class="d_shopunity_widget_1"></div>
+                        </div>
+                        <?php } ?>
                     </div>
-                    <input type="file" name="import" style="display: none;" accept="application/zip,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
-                    <input type="hidden" name="recipient" value=""/>
-                    <table class="table table-bordered table-hover">
-                        <thead>
-                            <tr>
-                                <td class="text-left">
-                                    <?php echo $column_name; ?>
-                                </td>
-                                <td class="text-left">
-                                    <?php echo $column_description; ?>
-                                </td>
-                                <td class="text-center col-sm-3">
-                                    <?php echo $column_action; ?>
-                                </td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach($modules as $key => $module) { ?>
-                            <tr>
-                                <td class="text-left">
-                                    <?php echo $module['title']; ?>
-                                </td>
-                                <td class="text-left">
-                                    <?php echo $module['description']; ?>
-                                </td>
-                                <td class="text-center">
-                                    <a id="button-export" class="btn btn-default" data-value="<?php echo $key; ?>"><i class="fa fa-download"></i> <?php echo $button_export; ?></a>
-                                    <a id="button-import" class="btn btn-default" data-value="<?php echo $key; ?>"><i class="fa fa-upload"></i> <?php echo $button_import; ?></a>
-                                    <a id="button-setting" class="btn btn-default" data-value="<?php echo $key; ?>"><i class="fa fa-filter"></i> <?php echo $button_filter; ?></a>
-                                </td>
-                            </tr>
-                            <?php }?>
-                        </tbody>
-                    </table>
-                    <ei_progress_modal></ei_progress_modal>
-                    <ei_setting_modal></ei_setting_modal>
+                    
                 </form>
             </div>
         </div>
     </div>
 </div>
 <?php foreach ($riot_tags as $riot_tag) { ?>
-    <script src="<?php echo $riot_tag; ?>" type="riot/tag"></script>
+<script src="<?php echo $riot_tag; ?>" type="riot/tag"></script>
 <?php } ?>
 <script type="text/javascript">
 
@@ -138,6 +148,12 @@
                 show:true
             });
         });
+        var d_shopunity_widget_1 = jQuery.extend(true, {}, d_shopunity_widget);
+            d_shopunity_widget_1.init({
+                class: '.d_shopunity_widget_1',
+                token: '<?php echo $token; ?>',
+                extension_id: '128'
+            })
     });
 </script>
 <?php echo $footer; ?>

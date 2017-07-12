@@ -34,16 +34,18 @@ class ControllerExtensionDExportImportExcel extends Controller {
 
         $this->document->addScript("view/javascript/d_export_import/d_export_import.js");
 
+        $this->document->addScript('view/javascript/d_shopunity/d_shopunity_widget.js');
+
         if(!$this->d_shopunity){
             $this->response->redirect($this->url->link($this->route.'/required', 'codename=d_shopunity&token='.$this->session->data['token'], 'SSL'));
         }
 
-        $this->load->model('d_shopunity/mbooth');
-        $this->model_d_shopunity_mbooth->validateDependencies($this->codename);
+        $this->load->model('extension/d_shopunity/mbooth');
+        $this->model_extension_d_shopunity_mbooth->validateDependencies($this->codename);
 
         $this->load->model('setting/setting');
         $this->load->model('extension/module');
-        $this->load->model('d_shopunity/setting');
+        $this->load->model('extension/d_shopunity/setting');
 
         // styles and scripts
         $this->document->addStyle('view/stylesheet/shopunity/bootstrap.css');
@@ -148,10 +150,10 @@ class ControllerExtensionDExportImportExcel extends Controller {
 
         //get store
         $data['store_id'] = $this->store_id;
-        $data['stores'] = $this->model_d_shopunity_setting->getStores();
+        $data['stores'] = $this->model_extension_d_shopunity_setting->getStores();
 
         //get setting
-        $data['setting'] = $this->model_d_shopunity_setting->getSetting($this->codename);
+        $data['setting'] = $this->model_extension_d_shopunity_setting->getSetting($this->codename);
 
         $this->load->model('setting/store');
 
@@ -199,6 +201,8 @@ class ControllerExtensionDExportImportExcel extends Controller {
 
 
         $data['riot_tags'] = $this->{'model_extension_module_'.$this->codename}->getRiotTags();
+
+        $data['notify'] = $this->{'model_extension_module_'.$this->codename}->checkCompleteVersion();
 
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');

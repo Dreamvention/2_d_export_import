@@ -30,12 +30,12 @@ class ControllerExtensionDExportImportSetting extends Controller {
             $this->response->redirect($this->url->link($this->route.'/required', 'codename=d_shopunity&token='.$this->session->data['token'], 'SSL'));
         }
 
-        $this->load->model('d_shopunity/mbooth');
-        $this->model_d_shopunity_mbooth->validateDependencies($this->codename);
+        $this->load->model('extension/d_shopunity/mbooth');
+        $this->model_extension_d_shopunity_mbooth->validateDependencies($this->codename);
         
         $this->load->model('setting/setting');
         $this->load->model('extension/module');
-        $this->load->model('d_shopunity/setting');
+        $this->load->model('extension/d_shopunity/setting');
 
                     //save post
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
@@ -119,15 +119,15 @@ class ControllerExtensionDExportImportSetting extends Controller {
         if (isset($this->request->post[$this->codename.'_setting'])) {
             $data['setting'] = $this->request->post[$this->codename.'_setting'];
         } else {
-            $data['setting'] = $this->model_d_shopunity_setting->getSetting($this->codename);
+            $data['setting'] = $this->model_extension_d_shopunity_setting->getSetting($this->codename);
         }
 
         //get store
         $data['store_id'] = $this->store_id;
-        $data['stores'] = $this->model_d_shopunity_setting->getStores();
+        $data['stores'] = $this->model_extension_d_shopunity_setting->getStores();
 
         //get setting
-        $data['setting'] = $this->model_d_shopunity_setting->getSetting($this->codename);
+        $data['setting'] = $this->model_extension_d_shopunity_setting->getSetting($this->codename);
 
         $this->load->model('setting/store');
 

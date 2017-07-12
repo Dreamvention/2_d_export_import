@@ -9,6 +9,8 @@ $_['heading_title_main']       = 'Export/Import';
 $_['text_edit']                = 'Edit Export/Import settings';
 $_['text_module']              = 'Modules';
 
+$_['text_complete_version'] = '<a href="https://shopunity.net/extension?extension_id=128" target="_blank">Export-Import Categories, Attributes, Options, Filters and the Full list of parameters of the Product with Export Import Pro</a>';
+
 //entry
 $_['entry_status']             = 'Status';
 
