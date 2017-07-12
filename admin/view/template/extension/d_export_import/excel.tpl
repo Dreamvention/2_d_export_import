@@ -58,7 +58,7 @@
                                 <td class="text-left">
                                     <?php echo $column_description; ?>
                                 </td>
-                                <td class="text-center col-sm-2">
+                                <td class="text-center col-sm-3">
                                     <?php echo $column_action; ?>
                                 </td>
                             </tr>
