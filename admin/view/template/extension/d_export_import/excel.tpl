@@ -75,9 +75,9 @@
                                             <?php echo $module['description']; ?>
                                         </td>
                                         <td class="text-center">
-                                            <a id="button-export" class="btn btn-default" data-value="<?php echo $key; ?>"><i class="fa fa-download"></i> <?php echo $button_export; ?></a>
-                                            <a id="button-import" class="btn btn-default" data-value="<?php echo $key; ?>"><i class="fa fa-upload"></i> <?php echo $button_import; ?></a>
-                                            <a id="button-setting" class="btn btn-default" data-value="<?php echo $key; ?>"><i class="fa fa-filter"></i> <?php echo $button_filter; ?></a>
+                                            <a id="button-export" class="btn btn-success" data-value="<?php echo $key; ?>" data-toggle="tooltip" title="<?php echo $button_export; ?>"><i class="fa fa-download"></i></a>
+                                            <a id="button-import" class="btn btn-primary" data-value="<?php echo $key; ?>" data-toggle="tooltip" title="<?php echo $button_import; ?>"><i class="fa fa-upload"></i></a>
+                                            <a id="button-setting" class="btn btn-info" data-value="<?php echo $key; ?>" data-toggle="tooltip" title="<?php echo $button_filter; ?>"><i class="fa fa-filter"></i></a>
                                         </td>
                                     </tr>
                                     <?php }?>
