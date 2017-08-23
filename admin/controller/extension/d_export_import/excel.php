@@ -26,6 +26,10 @@ class ControllerExtensionDExportImportExcel extends Controller {
 
     public function index(){
 
+        $this->load->model('extension/d_opencart_patch/url');
+        $this->load->model('extension/d_opencart_patch/load');
+        $this->load->model('extension/d_opencart_patch/user');
+
         $json = array();
 
         $this->document->addScript("view/javascript/d_export_import/library/jquery.serializejson.min.js");
@@ -36,15 +40,6 @@ class ControllerExtensionDExportImportExcel extends Controller {
 
         $this->document->addScript('view/javascript/d_shopunity/d_shopunity_widget.js');
 
-        if(!$this->d_shopunity){
-            $this->response->redirect($this->url->link($this->route.'/required', 'codename=d_shopunity&token='.$this->session->data['token'], 'SSL'));
-        }
-
-        $this->load->model('extension/d_shopunity/mbooth');
-        $this->model_extension_d_shopunity_mbooth->validateDependencies($this->codename);
-
-        $this->load->model('setting/setting');
-        $this->load->model('extension/module');
         $this->load->model('extension/d_shopunity/setting');
 
         // styles and scripts
@@ -67,7 +62,7 @@ class ControllerExtensionDExportImportExcel extends Controller {
         $data['codename'] = $this->codename;
         $data['route'] = $this->route;
         $data['version'] = $this->extension['version'];
-        $data['token'] =  $this->session->data['token'];
+        $data['token'] = $this->model_extension_d_opencart_patch_user->getToken();
         $data['d_shopunity'] = $this->d_shopunity;
 
         $json['translate'] = array();
@@ -105,15 +100,11 @@ class ControllerExtensionDExportImportExcel extends Controller {
         $json['translate']['button_close'] = $this->language->get('button_close');
         $data['button_cancel'] = $this->language->get('button_cancel');
 
-        $data['module_link'] = $this->url->link($this->route, 'token=' . $this->session->data['token'], 'SSL');
-        $data['action'] = $this->url->link($this->route.'/export', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['module_link'] = $this->model_extension_d_opencart_patch_url->link($this->route);
+        $data['action'] = $this->model_extension_d_opencart_patch_url->link($this->route.'/export');
 
-        if(VERSION>='2.3.0.0'){
-            $data['cancel'] = $this->url->link('extension/extension', 'token=' . $this->session->data['token'].'&type=module', 'SSL');
-        }
-        else{
-            $data['cancel'] = $this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL');
-        }
+
+        $data['cancel'] = $this->model_extension_d_opencart_patch_url->link('marketplace/extension', 'type=module');
 
         $modules = $this->{'model_extension_module_'.$this->codename}->getModules();
 
@@ -162,24 +153,16 @@ class ControllerExtensionDExportImportExcel extends Controller {
         $data['breadcrumbs'] = array(); 
         $data['breadcrumbs'][] = array(
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL')
+            'href' => $this->model_extension_d_opencart_patch_url->link('common/home')
             );
-        if(VERSION>='2.3.0.0'){
-            $data['breadcrumbs'][] = array(
-                'text'      => $this->language->get('text_module'),
-                'href'      => $this->url->link('extension/extension', 'token=' . $this->session->data['token'].'&type=module', 'SSL')
-                );
-        }
-        else{
-            $data['breadcrumbs'][] = array(
-                'text'      => $this->language->get('text_module'),
-                'href'      => $this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL')
-                );
-        }
+        $data['breadcrumbs'][] = array(
+            'text'      => $this->language->get('text_module'),
+            'href'      => $this->model_extension_d_opencart_patch_url->link('marketplace/extension', 'type=module')
+            );
 
         $data['breadcrumbs'][] = array(
             'text' => $this->language->get('heading_title_main'),
-            'href' => $this->url->link($this->route, 'token=' . $this->session->data['token'] . $url, 'SSL')
+            'href' => $this->model_extension_d_opencart_patch_url->link($this->route)
             );
 
         foreach($this->error as $key => $error){
@@ -188,7 +171,7 @@ class ControllerExtensionDExportImportExcel extends Controller {
 
         $data['tabs'] = $this->{'model_extension_module_'.$this->codename}->getTabs('excel');
 
-        $json['token'] = $this->session->data['token'];
+        $json['token'] = $this->model_extension_d_opencart_patch_user->getToken();
 
         if($this->request->server['HTTPS']){
             $json['server'] = HTTPS_SERVER;
@@ -207,8 +190,8 @@ class ControllerExtensionDExportImportExcel extends Controller {
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
-        
-        $this->response->setOutput($this->load->view($this->route.'.tpl', $data));
+
+        $this->response->setOutput($this->model_extension_d_opencart_patch_load->view($this->route, $data));
     }
 
     public function export(){

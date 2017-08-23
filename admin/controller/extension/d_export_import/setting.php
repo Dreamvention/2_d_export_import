@@ -26,15 +26,13 @@ class ControllerExtensionDExportImportSetting extends Controller {
     }
 
     public function index(){
-        if(!$this->d_shopunity){
-            $this->response->redirect($this->url->link($this->route.'/required', 'codename=d_shopunity&token='.$this->session->data['token'], 'SSL'));
-        }
 
-        $this->load->model('extension/d_shopunity/mbooth');
-        $this->model_extension_d_shopunity_mbooth->validateDependencies($this->codename);
-        
+        $this->load->model('extension/d_opencart_patch/url');
+        $this->load->model('extension/d_opencart_patch/load');
+        $this->load->model('extension/d_opencart_patch/user');
+
         $this->load->model('setting/setting');
-        $this->load->model('extension/module');
+
         $this->load->model('extension/d_shopunity/setting');
 
                     //save post
@@ -44,7 +42,7 @@ class ControllerExtensionDExportImportSetting extends Controller {
 
             $this->session->data['success'] = $this->language->get('text_success');
 
-            $this->response->redirect($this->url->link($this->route, 'token=' . $this->session->data['token'].'&type=module', 'SSL'));
+            $this->response->redirect($this->model_extension_d_opencart_patch_url->link($this->route, 'type=module'));
 
         }
 
@@ -71,7 +69,7 @@ class ControllerExtensionDExportImportSetting extends Controller {
         $data['codename'] = $this->codename;
         $data['route'] = $this->route;
         $data['version'] = $this->extension['version'];
-        $data['token'] =  $this->session->data['token'];
+        $data['token'] =  $this->model_extension_d_opencart_patch_user->getToken();
         $data['d_shopunity'] = $this->d_shopunity;
         
         $data['text_enabled'] = $this->language->get('text_enabled');
@@ -94,15 +92,10 @@ class ControllerExtensionDExportImportSetting extends Controller {
         $data['button_save_and_stay'] = $this->language->get('button_save_and_stay');
         $data['button_cancel'] = $this->language->get('button_cancel');
 
-        $data['module_link'] = $this->url->link($this->route, 'token=' . $this->session->data['token'], 'SSL');
-        $data['action'] = $this->url->link($this->route, 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['module_link'] =  $this->model_extension_d_opencart_patch_url->link($this->route);
+        $data['action'] =  $this->model_extension_d_opencart_patch_url->link($this->route, $url);
         
-        if(VERSION>='2.3.0.0'){
-            $data['cancel'] = $this->url->link('extension/extension', 'token=' . $this->session->data['token'].'&type=module', 'SSL');
-        }
-        else{
-            $data['cancel'] = $this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL');
-        }
+        $data['cancel'] = $this->model_extension_d_opencart_patch_url->link('marketplace/extension', 'type=module');
 
         if (isset($this->request->post[$this->codename.'_status'])) {
             $data[$this->codename.'_status'] = $this->request->post[$this->codename.'_status'];
@@ -136,24 +129,17 @@ class ControllerExtensionDExportImportSetting extends Controller {
         $data['breadcrumbs'] = array(); 
         $data['breadcrumbs'][] = array(
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL')
+            'href' =>  $this->model_extension_d_opencart_patch_url->link('common/home')
             );
-        if(VERSION>='2.3.0.0'){
-            $data['breadcrumbs'][] = array(
-                'text'      => $this->language->get('text_module'),
-                'href'      => $this->url->link('extension/extension', 'token=' . $this->session->data['token'].'&type=module', 'SSL')
-                );
-        }
-        else{
-            $data['breadcrumbs'][] = array(
-                'text'      => $this->language->get('text_module'),
-                'href'      => $this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL')
-                );
-        }
+
+        $data['breadcrumbs'][] = array(
+            'text'      => $this->language->get('text_module'),
+            'href'      =>  $this->model_extension_d_opencart_patch_url->link('extension/extension', 'type=module')
+            );
         
         $data['breadcrumbs'][] = array(
             'text' => $this->language->get('heading_title_main'),
-            'href' => $this->url->link($this->route, 'token=' . $this->session->data['token'] . $url, 'SSL')
+            'href' =>  $this->model_extension_d_opencart_patch_url->link($this->route, $url)
             );
 
         foreach($this->error as $key => $error){
@@ -171,7 +157,7 @@ class ControllerExtensionDExportImportSetting extends Controller {
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
 
-        $this->response->setOutput($this->load->view($this->route.'.tpl', $data));
+        $this->response->setOutput($this->model_extension_d_opencart_patch_load->view($this->route, $data));
     }
 
     private function validate($permission = 'modify') {

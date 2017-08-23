@@ -31,7 +31,16 @@ class ModelExtensionModuleDExportImport extends Model {
         $files = glob($dir);
         $result = array();
         foreach($files as $file){
-            $result[] = basename($file, '.php');
+            $fileName = basename($file, '.php');
+            $setting = $this->getModuleSetting($fileName);
+            if(empty($setting['opencart_version'])){
+                $result[] = $fileName;
+            }
+            else{
+                if(in_array(VERSION, $setting['opencart_version'])){
+                    $result[] = $fileName;
+                }
+            }
         }
         return $result;
     }
@@ -80,6 +89,9 @@ class ModelExtensionModuleDExportImport extends Model {
     }
 
     public function prepareTabs($tabs, $active){
+        $this->load->model('extension/d_opencart_patch/url');
+        $this->load->model('extension/d_opencart_patch/load');
+
         $data['tabs'] = array();
         $icons =array('excel'=> 'fa fa-file-excel-o', 'setting' => 'fa fa-cog');
 
@@ -101,11 +113,10 @@ class ModelExtensionModuleDExportImport extends Model {
                 'title' => $this->language->get('text_title'),
                 'active' => ($tab == $active)?true:false,
                 'icon' => $icon,
-                'href' => $this->url->link('extension/'.$this->codename.'/'.$tab, 'token='.$this->session->data['token'], 'SSL')
+                'href' => $this->model_extension_d_opencart_patch_url->link('extension/'.$this->codename.'/'.$tab)
                 );
         }
-
-        return $this->load->view('extension/'.$this->codename.'/partials/tabs.tpl', $data);
+        return $this->model_extension_d_opencart_patch_load->view('extension/'.$this->codename.'/partials/tabs', $data);
     }
 
     public function ajax($link){

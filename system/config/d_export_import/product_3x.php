@@ -1,16 +1,9 @@
 <?php
 $_['opencart_version'] = array(
-    "2.0.0.0",
-    "2.0.1.0",
-    "2.0.1.1",
-    "2.0.2.0",
-    "2.0.3.1",
-    "2.1.0.1",
-    "2.1.0.2",
-    "2.2.0.0",
-    "2.3.0.0",
-    "2.3.0.1",
-    "2.3.0.2");
+    "3.0.0.0",
+    "3.0.1.1",
+    "3.0.1.2",
+    "3.0.2.0");
 $_['main_sheet'] = array(
     'name' => 'Products',
     'event_export' => array(
@@ -68,14 +61,15 @@ $_['main_sheet'] = array(
             'concat' => 1
             ),
         array(
-            'name' => 'ua',
-            'full_name' => 'url_alias',
+            'name' => 'su',
+            'full_name' => 'seo_url',
             'key' => 'query',
             'related_key' => 'query',
             'prefix' => 'product_id=',
             'clear' => 1,
             'not_empty' => 1,
-            'join' => 'LEFT'
+            'join' => 'LEFT',
+            'multi_language' => 1
             )
         ),
     'columns' => array(
@@ -262,7 +256,7 @@ $_['main_sheet'] = array(
             ),
         array(
             'column' => 'keyword',
-            'table' => 'ua',
+            'table' => 'su',
             'name' => 'SEO Keyword'
             ),
         array(

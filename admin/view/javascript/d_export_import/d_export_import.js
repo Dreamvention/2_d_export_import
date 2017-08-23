@@ -37,6 +37,17 @@ var ei = (function() {
         this.trigger(action, state);
     }
 
+
+    this.getToken = function(){
+        if(getURLVar('token')){
+            return 'token='+getState().token;
+        }
+
+        if(getURLVar('user_token')){
+            return 'user_token='+getState().token
+        }
+    }
+
     this.export = function(){
 
         var send_data = $('#form-excel').serializeJSON();
@@ -47,7 +58,7 @@ var ei = (function() {
             send_data['filters'] = getState().selected_filters[getState().source];
         }
         $.ajax({
-            url:'index.php?route=extension/d_export_import/excel/export&token='+getState().token,
+            url:'index.php?route=extension/d_export_import/excel/export&'+this.getToken(),
             data:send_data,
             dataType:'json',
             context:this,
@@ -59,7 +70,7 @@ var ei = (function() {
                 }
                 else if(json['success']){
                     $('#modal-progress').modal('hide');
-                    location.href="index.php?route=extension/d_export_import/excel/download&token="+this.getState().token+"&source="+this.getState().source;
+                    location.href="index.php?route=extension/d_export_import/excel/download&"+this.getToken()+"&source="+this.getState().source;
                     this.finish();
                 }
                 else{
@@ -76,7 +87,7 @@ var ei = (function() {
         var formData = new FormData($('form#form-excel')[0]);
         var that = this;
         $.ajax({
-            url: 'index.php?route=extension/d_export_import/excel/import&token='+getState().token,
+            url: 'index.php?route=extension/d_export_import/excel/import&'+getToken(),
             type: 'POST',
             data: formData,
             contentType: false,

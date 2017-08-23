@@ -557,7 +557,7 @@ class ModelExtensionDExportImportImport extends Controller {
             if(!empty($table_setting['clear'])){
                 $sql = sprintf("DELETE FROM `".DB_PREFIX."%s` WHERE %s = '%s%s%s'", $table_setting['full_name'], $main_key_name, isset($table_setting['prefix'])?$table_setting['prefix']:'' ,$this->main_key, isset($table_setting['postfix'])?$table_setting['postfix']:'');
                 if(isset($table_setting['multi_language']) && $table_setting['multi_language'] == '1'){
-                    $sql .=' AND '.$table_setting['name'].'.language_id = '.(int)$language_id;
+                    $sql .=' AND `language_id` = '.(int)$language_id;
                 }
                 $this->db->query($sql);
                 return false;
