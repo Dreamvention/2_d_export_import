@@ -676,11 +676,11 @@ class ModelExtensionDExportImportImport extends Controller {
 
         if(!empty($this->module_setting['main_sheet']['tables'])){
             foreach ($this->module_setting['main_sheet']['tables'] as $table_setting) {
-                if(!empty($table_setting['multi_language'])){
+                if(!empty($table_setting['multi_language']) && !isset($table_setting['prefix'])&& !isset($table_setting['postfix'])){
                     $multi_language_tables[] = $table_setting['full_name'];
                 }
                 elseif(!empty($table_setting['prefix']) || !empty($table_setting['postfix'])){
-                    $this->truncateTableWithPrefix($table_setting);
+                    $this->truncateTableWithPrefix($table_setting, $language_id);
                 }
                 else{
                     $tables[] = $table_setting['full_name'];
@@ -690,11 +690,11 @@ class ModelExtensionDExportImportImport extends Controller {
 
         if(!empty($this->module_setting['main_sheet']['values']['tables'])){
             foreach ($this->module_setting['main_sheet']['values']['tables'] as $table_setting) {
-                if(!empty($table_setting['multi_language'])){
+                if(!empty($table_setting['multi_language']) && !isset($table_setting['prefix'])&& !isset($table_setting['postfix'])){
                     $multi_language_tables[] = $table_setting['full_name'];
                 }
                 elseif(!empty($table_setting['prefix']) || !empty($table_setting['postfix'])){
-                    $this->truncateTableWithPrefix($table_setting);
+                    $this->truncateTableWithPrefix($table_setting, $language_id);
                 }
                 else{
                     $tables[] = $table_setting['full_name'];
@@ -704,11 +704,11 @@ class ModelExtensionDExportImportImport extends Controller {
 
         if(!empty($this->module_setting['sheets'])){
             foreach ($this->module_setting['sheets'] as $sheet_setting) {
-                if(!empty($sheet_setting['table']['multi_language'])){
+                if(!empty($sheet_setting['table']['multi_language']) && !isset($table_setting['prefix'])&& !isset($table_setting['postfix'])){
                     $multi_language_tables[] = $sheet_setting['table']['full_name'];
                 }
                 elseif(!empty($table_setting['prefix']) || !empty($table_setting['postfix'])){
-                    $this->truncateTableWithPrefix($table_setting);
+                    $this->truncateTableWithPrefix($table_setting, $language_id);
                 }
                 else{
                     $tables[] = $sheet_setting['table']['full_name'];
@@ -716,11 +716,11 @@ class ModelExtensionDExportImportImport extends Controller {
 
                 if(!empty($sheet_setting['tables'])){
                     foreach ($sheet_setting['tables'] as $table_setting) {
-                        if(!empty($table_setting['multi_language'])){
+                        if(!empty($table_setting['multi_language']) && !isset($table_setting['prefix'])&& !isset($table_setting['postfix'])){
                             $multi_language_tables[] = $table_setting['full_name'];
                         }
                         elseif(!empty($table_setting['prefix']) || !empty($table_setting['postfix'])){
-                            $this->truncateTableWithPrefix($table_setting);
+                            $this->truncateTableWithPrefix($table_setting, $language_id);
                         }
                         else{
                             $tables[] = $table_setting['full_name'];
@@ -730,11 +730,11 @@ class ModelExtensionDExportImportImport extends Controller {
 
                 if(!empty($sheet_setting['values']['tables'])){
                     foreach ($sheet_setting['values']['tables'] as $table_setting) {
-                        if(!empty($table_setting['multi_language'])){
+                        if(!empty($table_setting['multi_language']) && !isset($table_setting['prefix'])&& !isset($table_setting['postfix'])){
                             $multi_language_tables[] = $table_setting['full_name'];
                         }
                         elseif(!empty($table_setting['prefix']) || !empty($table_setting['postfix'])){
-                            $this->truncateTableWithPrefix($table_setting);
+                            $this->truncateTableWithPrefix($table_setting, $language_id);
                         }
                         else{
                             $tables[] = $table_setting['full_name'];
@@ -757,7 +757,7 @@ class ModelExtensionDExportImportImport extends Controller {
         }
     }
 
-    protected function truncateTableWithPrefix($table_setting){
+    protected function truncateTableWithPrefix($table_setting, $language_id){
         if(!empty($table_setting['prefix'])){
             $prefix = $table_setting['prefix'];
         }
@@ -772,6 +772,12 @@ class ModelExtensionDExportImportImport extends Controller {
             $postfix = '';
         }
 
-        $this->db->query("DELETE FROM `".DB_PREFIX.$table_setting['full_name']."` WHERE `".$table_setting['related_key']."` LIKE '".$prefix.'%'.$postfix."'");
+        $sql = "DELETE FROM `".DB_PREFIX.$table_setting['full_name']."` WHERE `".$table_setting['related_key']."` LIKE '".$prefix.'%'.$postfix."'";
+        
+        if(!empty($table_setting['multi_language'])){
+            $sql .= " AND `language_id` = '".(int)$language_id."'";
+        }
+
+        $this->db->query($sql);
     }
 }
