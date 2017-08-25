@@ -19,6 +19,7 @@ $_['button_save_and_stay']     = 'Save and stay';
 
 //success
 $_['success_modifed']          = 'Success: You have modified module eBay featured!';
+$_['success_twig_compatible']  = 'Success: Twig support enabled. Please go to Export/Import!';
 
 //error
 $_['error_permission']         = 'Warning: You do not have permission to modify this module!';
