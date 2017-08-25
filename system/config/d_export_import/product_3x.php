@@ -219,6 +219,11 @@ $_['main_sheet'] = array(
             'name' => 'Date Available'
             ),
         array(
+            'column' => 'viewed',
+            'table' => 'p',
+            'name' => 'Viewed'
+            ),
+        array(
             'column' => 'length',
             'table' => 'p',
             'name' => 'Length'
