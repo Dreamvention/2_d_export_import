@@ -160,6 +160,8 @@ class ModelExtensionDExportImportImport extends Controller {
 
     public function importSheet($sheet_setting, $language_id, $sheet_index){
 
+        $this->main_key = null;
+
         if(!empty($sheet_setting['values'])){
             $this->importSheetWithValues($sheet_setting, $language_id, $sheet_index);
             return;
@@ -191,7 +193,7 @@ class ModelExtensionDExportImportImport extends Controller {
     }
 
     public function importSheetWithValues($sheet_setting, $language_id, $sheet_index){
-
+        $this->main_key = null;
         $this->reader->ChangeSheet($sheet_index);
 
         $this->reader->next();
@@ -200,12 +202,11 @@ class ModelExtensionDExportImportImport extends Controller {
         $count_main_column = count($sheet_setting['columns']);
 
         $main_data = array();
-
+        $main_key = null;
         if($this->reader->valid()){
             do{
                 $values = $this->reader->current();
                 $this->prepareTables($sheet_setting);
-
                 $main_sheet = ($sheet_index == 0)?true:false;
 
                 $row_values = array_slice($values, $count_main_column);
@@ -214,9 +215,14 @@ class ModelExtensionDExportImportImport extends Controller {
                 if(count(array_filter($main_row)) != 0){
                     $main_data = $main_row;
                     $main_row = $this->getColumns($sheet_setting, $main_row);
+                    $this->main_key = $main_key;
                     $this->setData($sheet_setting, $main_row, $language_id, $main_sheet);
+                    $main_key = $this->main_key;
 
                     if(count(array_filter($row_values)) != 0){
+
+                        $this->main_key = null;
+
                         $row_values = $this->prepareValues($main_data, $row_values, $sheet_setting, $main_sheet?true:false);
                         $this->prepareTables($sheet_setting, true);
                         $this->setData($sheet_setting['values'], $row_values, $language_id, $main_sheet);
@@ -535,7 +541,7 @@ class ModelExtensionDExportImportImport extends Controller {
     }
 
     public function checkIsset($main, $table_setting, $language_id){
-
+        
         if($main){
             if(!empty($this->value_key_name)){
                 $main_key_name = $this->value_key_name;
