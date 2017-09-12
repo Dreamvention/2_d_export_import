@@ -32,10 +32,10 @@
         "url": "https://shopunity.net/licenses/free"
     },
     "install": {
-        "url": " extension/extension/install&extension=d_export_import"
+        "url": " extension/extension/module/install&extension=d_export_import"
     },
     "uninstall": {
-        "url": "extension/extension/uninstall&extension=d_export_import"
+        "url": "extension/extension/module/uninstall&extension=d_export_import"
     },
     "support": {
         "email": "support@shopunity.com",
