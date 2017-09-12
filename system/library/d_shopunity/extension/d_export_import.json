@@ -1,6 +1,6 @@
 {
     "codename": "d_export_import",
-    "version": "2.1.1",
+    "version": "2.1.2",
     "name": "Export Import",
     "description": "This is the base for your tipical module. Use  this as a guide to make an awesome module.",
     "index": "extension/module/d_export_import",
@@ -32,10 +32,10 @@
         "url": "https://shopunity.net/licenses/free"
     },
     "install": {
-        "url": "extension/module/install&extension=d_export_import"
+        "url": " extension/extension/install&extension=d_export_import"
     },
     "uninstall": {
-        "url": "extension/module/uninstall&extension=d_export_import"
+        "url": "extension/extension/uninstall&extension=d_export_import"
     },
     "support": {
         "email": "support@shopunity.com",
@@ -73,6 +73,10 @@
         "system/library/SpreadsheetReader"
     ],
     "changelog": [
+        {
+            "varsion": "2.1.2",
+            "change": "Fix bugs"
+        },
         {
             "varsion": "2.1.1",
             "change": "Fix bugs"
