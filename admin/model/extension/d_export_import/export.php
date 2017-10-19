@@ -5,7 +5,7 @@
 
 include_once(DIR_SYSTEM.'library/xlsxwriter.class.php');
 
-class ModelExtensionDExportImportExport extends Controller {
+class ModelExtensionDExportImportExport extends Model {
 
     private $codename = 'd_export_import';
 

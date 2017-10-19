@@ -5,7 +5,7 @@
 
 include_once(DIR_SYSTEM.'library/SpreadsheetReader/SpreadsheetReader.php');
 
-class ModelExtensionDExportImportImport extends Controller
+class ModelExtensionDExportImportImport extends Model
 {
     private $codename = 'd_export_import';
 
