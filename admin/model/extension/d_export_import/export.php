@@ -50,8 +50,6 @@ class ModelExtensionDExportImportExport extends Model {
 
         try{
 
-            $count = $this->getTotal($this->module_setting['main_sheet'], $language_id, $filters);
-
             if(file_exists($cache)){
                 $this->session->data['ei_export_progress'] = $this->cache->get($cache);
             }
@@ -69,6 +67,8 @@ class ModelExtensionDExportImportExport extends Model {
                     'last_step' => 0
                     );
             }
+
+            $count = $this->getTotal($this->module_setting['main_sheet'], $language_id, $filters);
 
             $last_step = $this->session->data['ei_export_progress']['last_step'];
             
