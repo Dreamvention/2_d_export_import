@@ -294,7 +294,15 @@ class ModelExtensionDExportImportExport extends Model {
     }
 
     public function save($type){
-        $temp = tempnam(ini_get('upload_tmp_dir'), 'zip');
+        if(!empty(ini_get('upload_tmp_dir'))){
+            $dir_tmp = ini_get('upload_tmp_dir');
+        } elseif(!empty($this->request->sever['TMPDIR'])){
+            $dir_tmp = $this->request->sever['TMPDIR'];
+        } else {
+            $dir_tmp = DIR_CACHE.$this->codename;
+        }
+
+        $temp = tempnam($dir_tmp, 'zip');
         $zip = new ZipArchive();
         $zip->open($temp, ZipArchive::OVERWRITE);
 
@@ -473,7 +481,7 @@ class ModelExtensionDExportImportExport extends Model {
                     $value = $filter['value'];
                 }
                 elseif($filter['condition'] != 'LIKE'){
-                    $value = "'".$this->db->escape($filter['value'])."'";
+                    $value = $this->db->escape($filter['value']);
                 }
                 else{
                     $value = $this->db->escape($filter['value']);

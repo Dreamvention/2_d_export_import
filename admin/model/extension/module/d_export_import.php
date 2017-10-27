@@ -16,6 +16,12 @@ class ModelExtensionModuleDExportImport extends Model {
         return $return;
     }
 
+    public function checkPermission(){
+        $this->load->model('user/user_group');
+        $this->model_user_user_group->addPermission($this->getGroupId(), 'access', 'extension/'.$this->codename);
+        $this->model_user_user_group->addPermission($this->getGroupId(), 'modify', 'extension/'.$this->codename);
+    }
+
     public function getRiotTags(){
         $result = array();
         $files = glob(DIR_APPLICATION . 'view/template/extension/'.$this->codename.'/tags/*.tag', GLOB_BRACE);

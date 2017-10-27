@@ -22,6 +22,8 @@ class ControllerExtensionModuleDExportImport extends Controller {
         $this->d_opencart_patch = (file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_opencart_patch.json'));
         $this->d_twig_manager = (file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_twig_manager.json'));
 
+        $this->{'model_extension_module_'.$this->codename}->checkPermission();
+
         $this->extension = json_decode(file_get_contents(DIR_SYSTEM.'library/d_shopunity/extension/'.$this->codename.'.json'), true);
         $this->store_id = (isset($this->request->get['store_id'])) ? $this->request->get['store_id'] : 0;
         
