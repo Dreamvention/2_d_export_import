@@ -294,8 +294,9 @@ class ModelExtensionDExportImportExport extends Model {
     }
 
     public function save($type){
-        if(!empty(ini_get('upload_tmp_dir'))){
-            $dir_tmp = ini_get('upload_tmp_dir');
+        $upload_tmp_dir = ini_get('upload_tmp_dir');
+        if(!empty($upload_tmp_dir)){
+            $dir_tmp = $upload_tmp_dir;
         } elseif(!empty($this->request->sever['TMPDIR'])){
             $dir_tmp = $this->request->sever['TMPDIR'];
         } else {
