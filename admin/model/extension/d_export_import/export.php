@@ -410,7 +410,7 @@ class ModelExtensionDExportImportExport extends Model {
                     $value = $filter['value'];
                 }
                 elseif($filter['condition'] != 'LIKE'){
-                    $value = "'".$this->db->escape($filter['value'])."'";
+                    $value = $this->db->escape($filter['value']);
                 }
                 else{
                     $value = $this->db->escape($filter['value']);
