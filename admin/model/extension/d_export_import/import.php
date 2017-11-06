@@ -350,6 +350,10 @@ class ModelExtensionDExportImportImport extends Model
     {
         $table_data = array();
 
+        $values = array_map(function($item){
+            return htmlentities($item, ENT_QUOTES, 'UTF-8');
+        }, $values);
+
         foreach ($values as $column_index => $column_value) {
             $table_name = $sheet_setting['columns'][$column_index]['table'];
             $column_name = $sheet_setting['columns'][$column_index]['column'];

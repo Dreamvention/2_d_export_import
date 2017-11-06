@@ -455,6 +455,13 @@ class ModelExtensionDExportImportExport extends Model {
 
         $export_data = $query->rows;
 
+        foreach ($export_data as $key => $value){
+            $export_data[$key] = array_map(function($item){
+                $item = html_entity_decode($item, ENT_QUOTES, 'UTF-8');
+                return $item;
+            }, $value);
+        }
+        
         return $export_data;
     }
 
