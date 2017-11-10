@@ -646,13 +646,25 @@ class XLSXWriter
 		$all_invalids = array_merge($nonprinting,$invalid_chars);
 		return str_replace($all_invalids, "", $filename);
 	}
+
+    public static function xmlsafe($string) {
+        $replace =  array(
+            '"'=> "&quot;",
+            "&" => "&amp;",
+            "'"=> "&apos;",
+            "<" => "&lt;",
+            ">"=> "&gt;"
+            );
+        return strtr($string, $replace);
+    }
+
 	//------------------------------------------------------------------
 	public static function xmlspecialchars($val)
 	{
 		//note, badchars includes \t\n\r \x09\x0a\x0d
 		static $badchars = "\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f\x7f";
 		static $goodchars = "                                 ";
-		return strtr(htmlspecialchars($val, ENT_QUOTES | ENT_XML1), $badchars, $goodchars);//strtr appears to be faster than str_replace
+		return strtr(self::xmlsafe($val), $badchars, $goodchars);//strtr appears to be faster than str_replace
 	}
 	//------------------------------------------------------------------
 	public static function array_first_key(array $arr)
