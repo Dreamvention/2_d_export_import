@@ -18,6 +18,8 @@ class ModelExtensionModuleDExportImport extends Model {
 
     public function checkPermission(){
         $this->load->model('user/user_group');
+        $this->model_user_user_group->removePermission($this->getGroupId(), 'access', 'extension/'.$this->codename);
+        $this->model_user_user_group->removePermission($this->getGroupId(), 'modify', 'extension/'.$this->codename);
         $this->model_user_user_group->addPermission($this->getGroupId(), 'access', 'extension/'.$this->codename);
         $this->model_user_user_group->addPermission($this->getGroupId(), 'modify', 'extension/'.$this->codename);
     }
