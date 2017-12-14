@@ -355,6 +355,9 @@ class ModelExtensionDExportImportImport extends Model
         }, $values);
 
         foreach ($values as $column_index => $column_value) {
+            if($column_index == count($sheet_setting['columns'][$column_index])){
+                break;
+            }
             $table_name = $sheet_setting['columns'][$column_index]['table'];
             $column_name = $sheet_setting['columns'][$column_index]['column'];
             $table_data[$table_name][$column_name] = $column_value;
