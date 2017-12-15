@@ -30,10 +30,10 @@ class ControllerExtensionDExportImportSetting extends Controller {
         $this->load->model('extension/d_opencart_patch/url');
         $this->load->model('extension/d_opencart_patch/load');
         $this->load->model('extension/d_opencart_patch/user');
+        $this->load->model('extension/d_opencart_patch/store');
+        $this->load->model('extension/d_opencart_patch/setting');
 
         $this->load->model('setting/setting');
-
-        $this->load->model('extension/d_shopunity/setting');
 
                     //save post
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
@@ -97,33 +97,22 @@ class ControllerExtensionDExportImportSetting extends Controller {
         
         $data['cancel'] = $this->model_extension_d_opencart_patch_url->link('marketplace/extension', 'type=module');
 
-        if (isset($this->request->post[$this->codename.'_status'])) {
-            $data[$this->codename.'_status'] = $this->request->post[$this->codename.'_status'];
-        } else {
-            $data[$this->codename.'_status'] = $this->config->get($this->codename.'_status');
-        }
-
-        if (isset($this->request->post[$this->codename.'_setting'])) {
-            $data[$this->codename.'_setting'] = $this->request->post[$this->codename.'_setting'];
-        } else {
-            $data[$this->codename.'_setting'] = $this->config->get($this->codename.'_setting');
-        }
+        $setting = $this->model_extension_d_opencart_patch_setting->getSetting($this->codename);
 
         if (isset($this->request->post[$this->codename.'_setting'])) {
             $data['setting'] = $this->request->post[$this->codename.'_setting'];
+        } else if(isset($setting[$this->codename.'_setting'])) {
+            $data['setting'] = $setting[$this->codename.'_setting'];
         } else {
-            $data['setting'] = $this->model_extension_d_shopunity_setting->getSetting($this->codename);
+            $this->load->config($this->codename);
+            $data['setting'] = $this->config->get($this->codename.'_setting');
         }
 
         //get store
         $data['store_id'] = $this->store_id;
-        $data['stores'] = $this->model_extension_d_shopunity_setting->getStores();
-
-        //get setting
-        $data['setting'] = $this->model_extension_d_shopunity_setting->getSetting($this->codename);
+        $data['stores'] = $this->model_extension_d_opencart_patch_store->getAllStores();
 
         $this->load->model('setting/store');
-
 
         // Breadcrumbs
         $data['breadcrumbs'] = array(); 

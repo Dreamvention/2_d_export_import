@@ -30,6 +30,8 @@ class ControllerExtensionDExportImportExcel extends Controller {
         $this->load->model('extension/d_opencart_patch/url');
         $this->load->model('extension/d_opencart_patch/load');
         $this->load->model('extension/d_opencart_patch/user');
+        $this->load->model('extension/d_opencart_patch/setting');
+        $this->load->model('extension/d_opencart_patch/store');
 
         $json = array();
 
@@ -38,10 +40,9 @@ class ControllerExtensionDExportImportExcel extends Controller {
         $this->document->addScript('view/javascript/d_riot/riot+compiler.min.js');
 
         $this->document->addScript("view/javascript/d_export_import/d_export_import.js");
-
-        $this->document->addScript('view/javascript/d_shopunity/d_shopunity_widget.js');
-
-        $this->load->model('extension/d_shopunity/setting');
+        if($this->d_shopunity) {
+            $this->document->addScript('view/javascript/d_shopunity/d_shopunity_widget.js');
+        }
 
         // styles and scripts
         $this->document->addStyle('view/stylesheet/shopunity/bootstrap.css');
@@ -142,13 +143,9 @@ class ControllerExtensionDExportImportExcel extends Controller {
 
         //get store
         $data['store_id'] = $this->store_id;
-        $data['stores'] = $this->model_extension_d_shopunity_setting->getStores();
-
-        //get setting
-        $data['setting'] = $this->model_extension_d_shopunity_setting->getSetting($this->codename);
+        $data['stores'] = $this->model_extension_d_opencart_patch_store->getAllStores();
 
         $this->load->model('setting/store');
-
 
         // Breadcrumbs
         $data['breadcrumbs'] = array(); 
