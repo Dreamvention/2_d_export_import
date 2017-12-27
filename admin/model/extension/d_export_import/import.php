@@ -139,7 +139,13 @@ class ModelExtensionDExportImportImport extends Model
             if (file_exists(DIR_APPLICATION.'view/javascript/'.$this->codename.'/progress_info.json')) {
                 unlink(DIR_APPLICATION.'view/javascript/'.$this->codename.'/progress_info.json');
             }
-            array_map('unlink', glob(DIR_CACHE.$this->codename."/*"));
+            
+            $files = glob(DIR_CACHE.$this->codename."/*");
+
+            if($files) {
+                array_map('unlink', $files);
+            }
+
         } catch (Exception $e) {
             $errstr = $e->getMessage();
             $errline = $e->getLine();
@@ -355,7 +361,7 @@ class ModelExtensionDExportImportImport extends Model
         }, $values);
 
         foreach ($values as $column_index => $column_value) {
-            if($column_index == count($sheet_setting['columns'][$column_index])){
+            if($column_index == count($sheet_setting['columns'])){
                 break;
             }
             $table_name = $sheet_setting['columns'][$column_index]['table'];
@@ -632,7 +638,11 @@ class ModelExtensionDExportImportImport extends Model
         $json = array();
         $json['error'] = $errstr.' '.$errfile.' '.$errline;
 
-        array_map('unlink', glob(DIR_CACHE."d_export_import/*"));
+        $files = glob(DIR_CACHE."d_export_import/*");
+
+        if($files) {
+            array_map('unlink', $files);
+        }
 
         header('Content-Type: application/json');
         echo json_encode($json);

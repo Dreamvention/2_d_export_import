@@ -5,8 +5,8 @@
 
 include_once(DIR_SYSTEM.'library/xlsxwriter.class.php');
 
-class ModelExtensionDExportImportExport extends Model {
-
+class ModelExtensionDExportImportExport extends Model
+{
     private $codename = 'd_export_import';
 
     private $writer = array();
@@ -15,8 +15,8 @@ class ModelExtensionDExportImportExport extends Model {
 
     private $setting = array();
 
-    public function export($type, $language_id, $filters = array()){
-
+    public function export($type, $language_id, $filters = array())
+    {
         if (!file_exists(DIR_CACHE.$this->codename.'/')) {
             mkdir(DIR_CACHE.$this->codename.'/', 0777);
         }
@@ -31,33 +31,34 @@ class ModelExtensionDExportImportExport extends Model {
 
         $this->setting = $this->model_setting_setting->getSetting($this->codename);
 
-        if(empty($this->setting[$this->codename.'_setting'])){
+        if (empty($this->setting[$this->codename.'_setting'])) {
             $this->config->load($this->codename);
             $this->setting = $this->config->get($this->codename.'_setting');
-        }
-        else{
+        } else {
             $this->setting = $this->setting[$this->codename.'_setting'];
         }
 
         $json = array();
 
-        set_time_limit( 1800 );
+        set_time_limit(1800);
 
         $that = $this;
-        set_error_handler('ModelExtensionDExportImportExport::customErrorHandler', E_ALL );
+        set_error_handler('ModelExtensionDExportImportExport::customErrorHandler', E_ALL);
 
         register_shutdown_function(array('ModelExtensionDExportImportExport', 'fatal_error_shutdown_handler'));
 
-        try{
-
-            if(file_exists($cache)){
+        try {
+            if (file_exists($cache)) {
                 $this->session->data['ei_export_progress'] = $this->cache->get($cache);
             }
 
-            if(!isset($this->session->data['ei_export_progress'])){
-                array_map('unlink', glob(DIR_CACHE.$this->codename."/*"));
+            if (!isset($this->session->data['ei_export_progress'])) {
+                $files = glob(DIR_CACHE.$this->codename."/*");
+                if ($files) {
+                    array_map('unlink', $files);
+                }
 
-                if(!empty($this->module_setting['events_export_before'])){
+                if (!empty($this->module_setting['events_export_before'])) {
                     foreach ($this->module_setting['events_export_before'] as $action) {
                         $this->load->controller($action);
                     }
@@ -82,21 +83,18 @@ class ModelExtensionDExportImportExport extends Model {
 
             $styles = array('halign' => 'left', 'valign' => 'center');
 
-            if(!empty($this->setting['limit'])){
+            if (!empty($this->setting['limit'])) {
                 $start = $last_step*$this->setting['limit'];
                 $max_count = $start+$this->setting['limit'];
-            }
-            else{
+            } else {
                 $max_count = $count;
                 $start = 0;
             }
 
-            for($i = $start; $i < $max_count && $i<$count; $i += $this->setting['limit_step']){
-
-                if(($i+$this->setting['limit_step']) <= $count){
+            for ($i = $start; $i < $max_count && $i<$count; $i += $this->setting['limit_step']) {
+                if (($i+$this->setting['limit_step']) <= $count) {
                     $limit = $this->setting['limit_step'];
-                }
-                else{
+                } else {
                     $limit = $count - $i;
                 }
 
@@ -111,25 +109,22 @@ class ModelExtensionDExportImportExport extends Model {
                 $j = 0;
 
                 foreach ($main_sheet_data as $main_sheet_row) {
-
-                    if(isset($main_sheet_row[$this->module_setting['main_sheet']['table']['key']])){
+                    if (isset($main_sheet_row[$this->module_setting['main_sheet']['table']['key']])) {
                         $filter_data_secondary = array(
                             'filter_key' => $main_sheet_row[$this->module_setting['main_sheet']['table']['key']]
                             );
                     }
 
-                    if(empty($this->module_setting['main_sheet']['values'])){
+                    if (empty($this->module_setting['main_sheet']['values'])) {
                         $this->writer->writeSheetRow($this->module_setting['main_sheet']['name'], $main_sheet_row, $styles);
-                    }
-                    else{
+                    } else {
                         $values = $this->getData($this->module_setting['main_sheet']['values'], $language_id, $filter_data_secondary);
 
                         foreach ($values as $key => $value) {
-                            if($key == 0){
+                            if ($key == 0) {
                                 $row = array_merge(array_values($main_sheet_row), array_values($value));
-                            }
-                            else{
-                                $row = array_merge(array_values(array_fill(0,count($main_sheet_row), '')), array_values($value));
+                            } else {
+                                $row = array_merge(array_values(array_fill(0, count($main_sheet_row), '')), array_values($value));
                             }
 
                             $this->writer->writeSheetRow($this->module_setting['main_sheet']['name'], $row, $styles);
@@ -140,34 +135,30 @@ class ModelExtensionDExportImportExport extends Model {
                     foreach ($this->module_setting['sheets'] as $sheet_setting) {
                         $sheet_data = $this->getData($sheet_setting, $language_id, $filter_data_secondary);
                         foreach ($sheet_data as $sheet_row) {
-                            if(empty($sheet_setting['values'])){
+                            if (empty($sheet_setting['values'])) {
                                 $this->writer->writeSheetRow($sheet_setting['name'], $sheet_row, $styles);
-                            }
-                            else{
-                                if(isset($sheet_row[$sheet_setting['table']['key']])){
+                            } else {
+                                if (isset($sheet_row[$sheet_setting['table']['key']])) {
                                     $filter_data_values = array(
                                         'filter_key' => $sheet_row[$sheet_setting['table']['key']]
                                         );
-                                }
-                                else{
+                                } else {
                                     $filter_data_values = array();
                                 }
 
                                 $values = $this->getData($sheet_setting['values'], $language_id, $filter_data_values);
 
                                 foreach ($values as $key => $value) {
-                                    if($key == 0){
+                                    if ($key == 0) {
                                         $row = array_merge(array_values($sheet_row), array_values($value));
-                                    }
-                                    else{
-                                        $row = array_merge(array_values(array_fill(0,count($sheet_row), '')), array_values($value));
+                                    } else {
+                                        $row = array_merge(array_values(array_fill(0, count($sheet_row), '')), array_values($value));
                                     }
 
                                     $this->writer->writeSheetRow($sheet_setting['name'], $row, $styles);
                                 }
                                 $values = null;
                             }
-
                         }
 
                         $sheet_data = null;
@@ -177,11 +168,10 @@ class ModelExtensionDExportImportExport extends Model {
                     $this->updateProgress(($i+$j), $count);
                 }
                 $main_sheet_data = null;
-                
             }
             $filename = DIR_CACHE.$this->codename.'/'.$type.'_'.date("Y-m-d_H-i-s");
 
-            if(!empty($this->setting['limit'])){
+            if (!empty($this->setting['limit'])) {
                 $filename .= '_'.$last_step*$this->setting['limit'];
             }
 
@@ -191,42 +181,38 @@ class ModelExtensionDExportImportExport extends Model {
 
             $last_step++;
 
-            if(!empty($this->setting['limit'])){
-                $progress = $count ? round( $last_step * $this->setting['limit'] / $count * 100, 3 ) : 100;
-            }
-            else{
+            if (!empty($this->setting['limit'])) {
+                $progress = $count ? round($last_step * $this->setting['limit'] / $count * 100, 3) : 100;
+            } else {
                 $progress = 100;
             }
 
 
-            if( $progress >= 100 ) {
-                unset( $this->session->data['ei_export_progress'] );
+            if ($progress >= 100) {
+                unset($this->session->data['ei_export_progress']);
 
-                if( file_exists( $cache ) ) {
-                    unlink( $cache );
+                if (file_exists($cache)) {
+                    unlink($cache);
                 }
 
-                if(!empty($this->module_setting['events_export_after'])){
+                if (!empty($this->module_setting['events_export_after'])) {
                     foreach ($this->module_setting['events_export_after'] as $action) {
                         $this->load->controller($action);
                     }
                 }
 
-                if(file_exists(DIR_APPLICATION.'view/javascript/'.$this->codename.'/progress_info.json')){
+                if (file_exists(DIR_APPLICATION.'view/javascript/'.$this->codename.'/progress_info.json')) {
                     unlink(DIR_APPLICATION.'view/javascript/'.$this->codename.'/progress_info.json');
                 }
 
                 $json['success'] = true;
-            }
-            else{
-
+            } else {
                 $this->session->data['ei_export_progress']['last_step'] = $last_step;
 
                 $this->cache->set($cache, $this->session->data['ei_export_progress']);
             }
             $json['type'] = $type;
-        }
-        catch(Exception $e){
+        } catch (Exception $e) {
             $errstr = $e->getMessage();
             $errline = $e->getLine();
             $errfile = $e->getFile();
@@ -237,23 +223,24 @@ class ModelExtensionDExportImportExport extends Model {
         return $json;
     }
 
-    public function updateProgress($current, $count){
+    public function updateProgress($current, $count)
+    {
         $progress_data = array(
-            'progress' => $count ? round( $current / $count * 100, 3 ) : 100,
+            'progress' => $count ? round($current / $count * 100, 3) : 100,
             'current' => $current,
             'memory_usaged' => $this->getUsageMemory()
             );
-        if(file_exists(DIR_APPLICATION.'view/javascript/'.$this->codename.'/progress_info.json')){
-            if(is_writable(DIR_APPLICATION.'view/javascript/'.$this->codename.'/progress_info.json')){
+        if (file_exists(DIR_APPLICATION.'view/javascript/'.$this->codename.'/progress_info.json')) {
+            if (is_writable(DIR_APPLICATION.'view/javascript/'.$this->codename.'/progress_info.json')) {
                 file_put_contents(DIR_APPLICATION.'view/javascript/'.$this->codename.'/progress_info.json', json_encode($progress_data));
             }
-        }
-        else{
+        } else {
             file_put_contents(DIR_APPLICATION.'view/javascript/'.$this->codename.'/progress_info.json', json_encode($progress_data));
         }
     }
 
-    public function setTitles($setting){
+    public function setTitles($setting)
+    {
         $results = array();
         $columns_width = array();
 
@@ -264,7 +251,7 @@ class ModelExtensionDExportImportExport extends Model {
             $columns_width[] = $width;
         }
 
-        if(!empty($setting['values']['columns'])){
+        if (!empty($setting['values']['columns'])) {
             foreach ($setting['values']['columns'] as $value) {
                 $results[] = $value['name'];
                 $width = strlen($value['name'])+2;
@@ -284,20 +271,23 @@ class ModelExtensionDExportImportExport extends Model {
         $header_data = null;
     }
 
-    function convert($size){
+    public function convert($size)
+    {
         $unit=array('b','kb','mb','gb','tb','pb');
-        return @round($size/pow(1024,($i=floor(log($size,1024)))),2).' '.$unit[$i];
+        return @round($size/pow(1024, ($i=floor(log($size, 1024)))), 2).' '.$unit[$i];
     }
 
-    public function getUsageMemory(){
+    public function getUsageMemory()
+    {
         return $this->convert(memory_get_peak_usage(true));
     }
 
-    public function save($type){
+    public function save($type)
+    {
         $upload_tmp_dir = ini_get('upload_tmp_dir');
-        if(!empty($upload_tmp_dir)){
+        if (!empty($upload_tmp_dir)) {
             $dir_tmp = $upload_tmp_dir;
-        } elseif(!empty($this->request->sever['TMPDIR'])){
+        } elseif (!empty($this->request->sever['TMPDIR'])) {
             $dir_tmp = $this->request->sever['TMPDIR'];
         } else {
             $dir_tmp = DIR_CACHE.$this->codename;
@@ -313,8 +303,11 @@ class ModelExtensionDExportImportExport extends Model {
         }
 
         $zip->close();
-
-        array_map('unlink', glob(DIR_CACHE.$this->codename."/*.xlsx"));
+        
+        $files = glob(DIR_CACHE.$this->codename."/*.xlsx");
+        if ($files) {
+            array_map('unlink', $files);
+        }
 
         header('Pragma: public');
         header('Expires: 0');
@@ -327,68 +320,65 @@ class ModelExtensionDExportImportExport extends Model {
         unlink($temp);
     }
 
-    public function getData($setting, $language_id, $data = array()) {
+    public function getData($setting, $language_id, $data = array())
+    {
         $sql = "SELECT ";
 
         $implode = array();
 
         foreach ($setting['columns'] as $column) {
-            if(!empty($column['concat'])){
+            if (!empty($column['concat'])) {
                 $table = $this->getTableByName($column['table'], $setting);
-                if(!empty($table)){
+                if (!empty($table)) {
                     $implode[] = "( SELECT GROUP_CONCAT(".$column['column']." SEPARATOR ',') FROM `".DB_PREFIX.$table['full_name']."` WHERE `".$table['key']."` = `".$setting['table']['name']."`.`".$setting['table']['key']."` ) as ".$column['column'];
                 }
-            }
-            else{
+            } else {
                 $implode[] = $column['table'].'.'.$column['column'];
             }
-
         }
 
-        if(count($implode) > 0){
+        if (count($implode) > 0) {
             $sql .= implode(' , ', $implode);
-        }
-        else{
+        } else {
             $sql .= ' * ';
         }
 
         $sql .= " FROM `".DB_PREFIX.$setting['table']['full_name']."` ".$setting['table']['name'].' ';
 
         foreach ($setting['tables'] as $table) {
-            if(isset($table['concat']) && $table['concat'] == '1'){
+            if (isset($table['concat']) && $table['concat'] == '1') {
                 continue;
             }
 
-            $sql .= ' '.$table['join']."  JOIN `".DB_PREFIX.$table['full_name']."` ".$table['name']; 
+            $sql .= ' '.$table['join']."  JOIN `".DB_PREFIX.$table['full_name']."` ".$table['name'];
 
-            $sql .= "  ON ("; 
+            $sql .= "  ON (";
 
-            if(!empty($table['prefix']) || !empty($table['postfix'])){
+            if (!empty($table['prefix']) || !empty($table['postfix'])) {
                 $sql .= "CONCAT(";
             }
 
-            if(!empty($table['prefix'])){
+            if (!empty($table['prefix'])) {
                 $sql .= "'" . $table['prefix'] . "' , ";
             }
 
-            if(isset($table['related_table']) && $table['related_table'] == '1'){
+            if (isset($table['related_table']) && $table['related_table'] == '1') {
                 $sql .= $table['related_table'].'.'.$setting['table']["key"];
-            }
-            else{
+            } else {
                 $sql .= $setting['table']["name"].'.'.$setting['table']["key"];
             }
 
-            if(!empty($table['postfix'])){
+            if (!empty($table['postfix'])) {
                 $sql .= ", '" . $table['postfix']."'";
             }
 
-            if(!empty($table['prefix']) || !empty($table['postfix'])){
+            if (!empty($table['prefix']) || !empty($table['postfix'])) {
                 $sql .= ")";
             }
 
             $sql .= ' = '.$table["name"].'.'.$table["key"];
             
-            if(!empty($table['multi_language'])){
+            if (!empty($table['multi_language'])) {
                 $sql .= ' AND '.$table["name"].'.language_id = '.(int)$language_id;
             }
 
@@ -397,45 +387,41 @@ class ModelExtensionDExportImportExport extends Model {
 
         $implode = array();
 
-        if(!empty($setting['table']['multi_language'])){
+        if (!empty($setting['table']['multi_language'])) {
             $implode[] = $setting['table']["name"].'.language_id='.(int)$this->config->get('config_language_id');
         }
 
-        if(!empty($data['filter_key'])){
+        if (!empty($data['filter_key'])) {
             $implode[] = $setting['table']['name'].'.'.$setting['table']['related_key'].'='.$data['filter_key'];
         }
 
-        if(!empty($data['filters'])){
+        if (!empty($data['filters'])) {
             foreach ($data['filters'] as $filter) {
-                if(is_numeric($filter['value'])){
+                if (is_numeric($filter['value'])) {
                     $value = $filter['value'];
-                }
-                elseif($filter['condition'] != 'LIKE'){
+                } elseif ($filter['condition'] != 'LIKE') {
+                    $value = $this->db->escape($filter['value']);
+                } else {
                     $value = $this->db->escape($filter['value']);
                 }
-                else{
-                    $value = $this->db->escape($filter['value']);
-                }
-                if($filter['condition'] != 'LIKE'){
+                if ($filter['condition'] != 'LIKE') {
                     $implode[] = $filter['column']." ".html_entity_decode($filter['condition'], ENT_QUOTES, 'UTF-8') . " '".$value."' ";
-                }
-                else{
+                } else {
                     $implode[] = $filter['column']." LIKE '%".$value."%'";
                 }
             }
         }
 
-        if(count($implode) > 0) {
+        if (count($implode) > 0) {
             $sql .= " WHERE ".implode(' AND ', $implode);
         }
 
-        if(!isset($data['filter_key'])){
+        if (!isset($data['filter_key'])) {
             $sql .= " GROUP BY ".$setting['table']["name"].'.'.$setting['table']["key"];
         }
-        if(is_array($setting['table']["key"])){
+        if (is_array($setting['table']["key"])) {
             $sql .= " ORDER BY ".$setting['table']["name"].'.'.implode(',', $setting['table']["key"])." ASC";
-        }
-        else{
+        } else {
             $sql .= " ORDER BY ".$setting['table']["name"].'.'. $setting['table']["key"]." ASC";
         }
 
@@ -455,8 +441,8 @@ class ModelExtensionDExportImportExport extends Model {
 
         $export_data = $query->rows;
 
-        foreach ($export_data as $key => $value){
-            $export_data[$key] = array_map(function($item){
+        foreach ($export_data as $key => $value) {
+            $export_data[$key] = array_map(function ($item) {
                 $item = html_entity_decode($item, ENT_QUOTES, 'UTF-8');
                 return $item;
             }, $value);
@@ -465,15 +451,15 @@ class ModelExtensionDExportImportExport extends Model {
         return $export_data;
     }
 
-    public function getTotal($setting, $language_id, $filters = array()) {
-
+    public function getTotal($setting, $language_id, $filters = array())
+    {
         $sql = "SELECT count(*) as total FROM `".DB_PREFIX.$setting['table']['full_name']."` ".$setting['table']['name'].' ';
 
         foreach ($setting['tables'] as $table) {
-            if(!isset($table['concat']) && !isset($table['prefix']) && !isset($table['postfix'])){
+            if (!isset($table['concat']) && !isset($table['prefix']) && !isset($table['postfix'])) {
                 $sql .= " LEFT JOIN `".DB_PREFIX.$table['full_name']."` ".$table['name']."  ON (".$setting['table']["name"].'.'.$setting['table']["key"]." = ".$table["name"].'.'.$table["key"];
 
-                if(!empty($table['multi_language'])){
+                if (!empty($table['multi_language'])) {
                     $sql .= ' AND '.$table["name"].'.language_id = '.(int)$language_id;
                 }
 
@@ -481,28 +467,25 @@ class ModelExtensionDExportImportExport extends Model {
             }
         }
 
-        if(!empty($filters)){
+        if (!empty($filters)) {
             $implode = array();
 
             foreach ($filters as $filter) {
-                if(is_numeric($filter['value'])){
+                if (is_numeric($filter['value'])) {
                     $value = $filter['value'];
-                }
-                elseif($filter['condition'] != 'LIKE'){
+                } elseif ($filter['condition'] != 'LIKE') {
+                    $value = $this->db->escape($filter['value']);
+                } else {
                     $value = $this->db->escape($filter['value']);
                 }
-                else{
-                    $value = $this->db->escape($filter['value']);
-                }
-                if($filter['condition'] != 'LIKE'){
+                if ($filter['condition'] != 'LIKE') {
                     $implode[] = $filter['column']." ".html_entity_decode($filter['condition'], ENT_QUOTES, 'UTF-8') . " ".$value;
-                }
-                else{
+                } else {
                     $implode[] = $filter['column']." LIKE '%".$value."%'";
                 }
             }
 
-            if(count($implode) > 0){
+            if (count($implode) > 0) {
                 $sql .= " WHERE ".implode(' AND ', $implode);
             }
         }
@@ -512,28 +495,31 @@ class ModelExtensionDExportImportExport extends Model {
         return $query->row['total'];
     }
 
-    public function getTableByName($name, $setting){
-
-        if($setting['table']['name'] == $name){
+    public function getTableByName($name, $setting)
+    {
+        if ($setting['table']['name'] == $name) {
             return $setting['table'];
         }
 
         foreach ($setting['tables'] as $table) {
-            if($table['name'] == $name){
+            if ($table['name'] == $name) {
                 return $table;
             }
         }
         return array();
     }
 
-    public static function customErrorHandler($errno, $errstr, $errfile, $errline){
+    public static function customErrorHandler($errno, $errstr, $errfile, $errline)
+    {
         $json = array();
         $json['error'] = $errstr;
         $json['errno'] = $errno;
         $json['errfile'] = $errfile;
         $json['errline'] = $errline;
-
-        array_map('unlink', glob(DIR_CACHE."d_export_import/*"));
+        $files = glob(DIR_CACHE."d_export_import/*");
+        if($files) {
+            array_map('unlink', $files);
+        }
 
         header('Content-Type: application/json');
         echo json_encode($json);
@@ -541,11 +527,11 @@ class ModelExtensionDExportImportExport extends Model {
     }
 
 
-    public static function fatal_error_shutdown_handler(){
+    public static function fatal_error_shutdown_handler()
+    {
         $last_error = error_get_last();
         if ($last_error['type'] === E_ERROR) {
             $this->customErrorHandler(E_ERROR, $last_error['message'], $last_error['file'], $last_error['line']);
         }
     }
-
 }
