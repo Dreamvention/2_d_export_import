@@ -17,7 +17,6 @@ class ControllerExtensionDExportImportExcel extends Controller {
         $this->load->model('extension/module/'.$this->codename);
         $this->load->language($this->route);
         $this->load->language('extension/module/'.$this->codename);
-        $this->{'model_extension_module_'.$this->codename}->checkPermission();
         
         $this->d_shopunity = (file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_shopunity.json'));
         $this->extension = json_decode(file_get_contents(DIR_SYSTEM.'library/d_shopunity/extension/'.$this->codename.'.json'), true);
