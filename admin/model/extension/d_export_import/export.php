@@ -120,15 +120,21 @@ class ModelExtensionDExportImportExport extends Model
                     } else {
                         $values = $this->getData($this->module_setting['main_sheet']['values'], $language_id, $filter_data_secondary);
 
-                        foreach ($values as $key => $value) {
-                            if ($key == 0) {
-                                $row = array_merge(array_values($main_sheet_row), array_values($value));
-                            } else {
-                                $row = array_merge(array_values(array_fill(0, count($main_sheet_row), '')), array_values($value));
-                            }
+                        if(!empty($values)) {
+                            foreach ($values as $key => $value) {
+                                if($key == 0){
+                                    $row = array_merge(array_values($main_sheet_row), array_values($value));
+                                }
+                                else{
+                                    $row = array_merge(array_values(array_fill(0,count($main_sheet_row), '')), array_values($value));
+                                }
 
-                            $this->writer->writeSheetRow($this->module_setting['main_sheet']['name'], $row, $styles);
+                                $this->writer->writeSheetRow($this->module_setting['main_sheet']['name'], $row, $styles);
+                            }
+                        } else {
+                            $this->writer->writeSheetRow($this->module_setting['main_sheet']['name'], $main_sheet_row, $styles);
                         }
+
                         $values = null;
                     }
 
