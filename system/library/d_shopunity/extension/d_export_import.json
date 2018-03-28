@@ -1,6 +1,6 @@
 {
     "codename": "d_export_import",
-    "version": "2.1.6",
+    "version": "2.1.7",
     "name": "Export Import",
     "description": "This is the base for your tipical module. Use  this as a guide to make an awesome module.",
     "index": "extension/module/d_export_import",
@@ -74,6 +74,9 @@
     ],
     "changelog": [
         {
+            "varsion": "2.1.7",
+            "change": "Fix bugs"
+        },        {
             "varsion": "2.1.6",
             "change": "Fix bugs"
         },
