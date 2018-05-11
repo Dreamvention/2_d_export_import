@@ -394,7 +394,7 @@ class ModelExtensionDExportImportExport extends Model
         $implode = array();
 
         if (!empty($setting['table']['multi_language'])) {
-            $implode[] = $setting['table']["name"].'.language_id='.(int)$this->config->get('config_language_id');
+            $implode[] = $setting['table']["name"].'.language_id= '.(int)$language_id;
         }
 
         if (!empty($data['filter_key'])) {
