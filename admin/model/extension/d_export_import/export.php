@@ -410,10 +410,20 @@ class ModelExtensionDExportImportExport extends Model
                 } else {
                     $value = $this->db->escape($filter['value']);
                 }
-                if ($filter['condition'] != 'LIKE') {
-                    $implode[] = $filter['column']." ".html_entity_decode($filter['condition'], ENT_QUOTES, 'UTF-8') . " '".$value."' ";
+                if($filter['concat']) {
+                    $filter_query = '';
+                    if ($filter['condition'] != 'LIKE') {
+                        $filter_query = str_replace(array('[[db_prefix]]','[[condition]]', '[[value]]'), array(DB_PREFIX, html_entity_decode($filter['condition'], ENT_QUOTES, 'UTF-8'), $value), $filter['column']);
+                    } else {
+                        $filter_query = str_replace(array('[[db_prefix]]', '[[condition]]', '[[value]]'), array(DB_PREFIX, "LIKE '%", $value."%'"), $filter['column']);
+                    }
+                    $implode[] = '`'.$setting['table']['name'].'`.`'.$setting['table']['key'].'` IN '.$filter_query;
                 } else {
-                    $implode[] = $filter['column']." LIKE '%".$value."%'";
+                    if ($filter['condition'] != 'LIKE') {
+                        $implode[] = $filter['column']." ".html_entity_decode($filter['condition'], ENT_QUOTES, 'UTF-8') . " ".$value;
+                    } else {
+                        $implode[] = $filter['column']." LIKE '%".$value."%'";
+                    }
                 }
             }
         }
@@ -477,6 +487,7 @@ class ModelExtensionDExportImportExport extends Model
             $implode = array();
 
             foreach ($filters as $filter) {
+
                 if (is_numeric($filter['value'])) {
                     $value = $filter['value'];
                 } elseif ($filter['condition'] != 'LIKE') {
@@ -484,10 +495,20 @@ class ModelExtensionDExportImportExport extends Model
                 } else {
                     $value = $this->db->escape($filter['value']);
                 }
-                if ($filter['condition'] != 'LIKE') {
-                    $implode[] = $filter['column']." ".html_entity_decode($filter['condition'], ENT_QUOTES, 'UTF-8') . " ".$value;
+                if($filter['concat']) {
+                    $filter_query = '';
+                    if ($filter['condition'] != 'LIKE') {
+                        $filter_query = str_replace(array('[[db_prefix]]','[[condition]]', '[[value]]'), array(DB_PREFIX, html_entity_decode($filter['condition'], ENT_QUOTES, 'UTF-8'), $value), $filter['column']);
+                    } else {
+                        $filter_query = str_replace(array('[[db_prefix]]', '[[condition]]', '[[value]]'), array(DB_PREFIX, "LIKE '%", $value."%'"), $filter['column']);
+                    }
+                    $implode[] = '`'.$setting['table']['name'].'`.`'.$setting['table']['key'].'` IN '.$filter_query;
                 } else {
-                    $implode[] = $filter['column']." LIKE '%".$value."%'";
+                    if ($filter['condition'] != 'LIKE') {
+                        $implode[] = $filter['column']." ".html_entity_decode($filter['condition'], ENT_QUOTES, 'UTF-8') . " ".$value;
+                    } else {
+                        $implode[] = $filter['column']." LIKE '%".$value."%'";
+                    }
                 }
             }
 

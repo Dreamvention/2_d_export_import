@@ -12,7 +12,7 @@
                         <tr each={filter, filter_index in getState().selected_filters[getState().filter_active]}>
                             <td>
                                 <select class="form-control" onchange={change_column}>
-                                    <option each={item in getState().filters[getState().filter_active]} value="`{item.table}`.`{item.column}`">{item.name}</option>
+                                    <option each={item in getState().filters[getState().filter_active]} data-concat={item.concat? item.concat : 0} value="{getFilterValue(item)}">{item.name}</option>
                                 </select>
                             </td>
                             <td>
@@ -47,6 +47,9 @@
     change_column(e){
         filter_active = getState().filter_active;
         filters = getState().selected_filters;
+
+        filters[filter_active][e.item.filter_index].concat = $(e.target).find('option:selected').data('concat')
+
         filters[filter_active][e.item.filter_index]['column'] = $(e.target).val();
         updateState({'selected_filters': filters});
     }
@@ -61,6 +64,16 @@
         filters = getState().selected_filters;
         filters[filter_active][e.item.filter_index]['value'] = $(e.target).val();
         updateState({'selected_filters': filters});
+    }
+    getFilterValue(item) {
+        var result = ''
+        if(item.concat) {
+            result = '(SELECT `'+item.table.name + '`.`' + item.table.key+'` FROM `[[db_prefix]]'+item.table.full_name+'` '+item.table.name + ' WHERE `'+item.table.name+'`.'+item.column+' [[condition]] \'[[value]]\')';
+        } else {
+            result = '`'+item.table + '`.`' + item.column+'`'
+        }
+
+        return result
     }
     addFilter(e){
         filter_active = getState().filter_active;
@@ -77,14 +90,16 @@
             filters[filter_active].push({
                 value : '',
                 condition : '=',
-                column : column
+                column : column,
+                concat: 0
             });
         }
         else{
             filters[filter_active] = [{
                 value : '',
                 condition : '=',
-                column : column
+                column : column,
+                concat: 0
             }];
         }
         updateState({'selected_filters': filters});

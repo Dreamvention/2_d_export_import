@@ -274,25 +274,29 @@ $_['main_sheet'] = array(
             'column' => 'category_id',
             'table' => 'p2c',
             'concat' => 1,
-            'name' => 'Categories'
+            'name' => 'Categories',
+            'filter' => 1
             ),
         array(
             'column' => 'store_id',
             'table' => 'p2s',
             'concat' => 1,
-            'name' => 'Stores'
+            'name' => 'Stores',
+            'filter' => 1
             ),
         array(
             'column' => 'download_id',
             'table' => 'p2d',
             'concat' => 1,
-            'name' => 'Downloads'
+            'name' => 'Downloads',
+            'filter' => 1
             ),
         array(
             'column' => 'related_id',
             'table' => 'pr',
             'concat' => 1,
-            'name' => 'Related Products'
+            'name' => 'Related Products',
+            'filter' => 1
             )
         )
 );

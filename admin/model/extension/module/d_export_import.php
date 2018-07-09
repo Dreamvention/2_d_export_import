@@ -73,6 +73,18 @@ class ModelExtensionModuleDExportImport extends Model {
             return !empty($value['filter'])?true:false;
         });
 
+        $results = array_map(function($value) use ($setting){
+            if(!empty($value['concat'])){
+                $table = array_filter($setting['main_sheet']['tables'] ,function($filter_value) use ($value){
+                    return $filter_value['name'] == $value['table'];
+                });
+                if(!empty($table)){
+                    $value['table'] = array_pop($table);
+                }
+            }
+            return $value;
+        }, $results);
+
         return $results;
     }
 
