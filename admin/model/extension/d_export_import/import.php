@@ -71,7 +71,7 @@ class ModelExtensionDExportImportImport extends Model
         set_time_limit(1800);
 
         $this->load->language('extension/'.$this->codename.'/import');
-        
+
         if (!file_exists(DIR_CACHE.$this->codename.'/')) {
             mkdir(DIR_CACHE.$this->codename.'/', 0777);
         }
@@ -139,7 +139,7 @@ class ModelExtensionDExportImportImport extends Model
             if (file_exists(DIR_APPLICATION.'view/javascript/'.$this->codename.'/progress_info.json')) {
                 unlink(DIR_APPLICATION.'view/javascript/'.$this->codename.'/progress_info.json');
             }
-            
+
             $files = glob(DIR_CACHE.$this->codename."/*");
 
             if($files) {
@@ -147,10 +147,6 @@ class ModelExtensionDExportImportImport extends Model
             }
 
         } catch (Exception $e) {
-            $errstr = $e->getMessage();
-            $errline = $e->getLine();
-            $errfile = $e->getFile();
-            $errno = $e->getCode();
             $json['error'] = $e->getMessage();
         }
         return $json;
@@ -178,7 +174,7 @@ class ModelExtensionDExportImportImport extends Model
                     $main_sheet = ($sheet_index == 0)?true:false;
 
                     $values = $this->getColumns($sheet_setting, $values);
-                
+
                     $this->setData($sheet_setting, $values, $language_id, $main_sheet);
                 }
 
@@ -273,7 +269,7 @@ class ModelExtensionDExportImportImport extends Model
                 }
             }
         }
-        
+
         return $values_columns;
     }
 
@@ -589,7 +585,7 @@ class ModelExtensionDExportImportImport extends Model
             $progress_data = array(
                 'progress' => $count,
                 'memory_usaged' => $this->getUsageMemory()
-                );
+            );
             file_put_contents(DIR_APPLICATION.'view/javascript/'.$this->codename.'/progress_info.json', json_encode($progress_data));
         }
         return $count;
@@ -620,7 +616,7 @@ class ModelExtensionDExportImportImport extends Model
             'count_sheets' => $this->count_sheets,
             'current' => $current_item,
             'memory_usaged' => $this->getUsageMemory()
-            );
+        );
         try {
             if (file_exists(DIR_APPLICATION.'view/javascript/'.$this->codename.'/progress_info.json')) {
                 if (is_writable(DIR_APPLICATION.'view/javascript/'.$this->codename.'/progress_info.json')) {
@@ -690,17 +686,16 @@ class ModelExtensionDExportImportImport extends Model
                 }
             }
         }
-
         if (!empty($this->module_setting['sheets'])) {
             foreach ($this->module_setting['sheets'] as $sheet_setting) {
-                if (!empty($sheet_setting['table']['multi_language']) && !isset($table_setting['prefix'])&& !isset($table_setting['postfix'])) {
+
+                if (!empty($sheet_setting['table']['multi_language']) && !isset($sheet_setting['table']['prefix'])&& !isset($sheet_setting['table']['postfix'])) {
                     $multi_language_tables[] = $sheet_setting['table']['full_name'];
-                } elseif (!empty($table_setting['prefix']) || !empty($table_setting['postfix'])) {
-                    $this->truncateTableWithPrefix($table_setting, $language_id);
+                } elseif (!empty($sheet_setting['table']['prefix']) || !empty($sheet_setting['table']['postfix'])) {
+                    $this->truncateTableWithPrefix($sheet_setting['table'], $language_id);
                 } else {
                     $tables[] = $sheet_setting['table']['full_name'];
                 }
-
                 if (!empty($sheet_setting['tables'])) {
                     foreach ($sheet_setting['tables'] as $table_setting) {
                         if (!empty($table_setting['multi_language']) && !isset($table_setting['prefix'])&& !isset($table_setting['postfix'])) {
@@ -726,13 +721,13 @@ class ModelExtensionDExportImportImport extends Model
                 }
             }
         }
-        
+
         if (!empty($tables)) {
             foreach ($tables as $table) {
                 $this->db->query("TRUNCATE TABLE `".DB_PREFIX.$table."`");
             }
         }
-        
+
         if (!empty($multi_language_tables)) {
             foreach ($multi_language_tables as $table) {
                 $this->db->query("DELETE FROM `".DB_PREFIX.$table."` WHERE `language_id` = '".(int)$language_id."'");
@@ -755,7 +750,7 @@ class ModelExtensionDExportImportImport extends Model
         }
 
         $sql = "DELETE FROM `".DB_PREFIX.$table_setting['full_name']."` WHERE `".$table_setting['related_key']."` LIKE '".$prefix.'%'.$postfix."'";
-        
+
         if (!empty($table_setting['multi_language'])) {
             $sql .= " AND `language_id` = '".(int)$language_id."'";
         }
