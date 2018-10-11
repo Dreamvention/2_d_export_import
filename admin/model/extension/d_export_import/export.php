@@ -145,9 +145,11 @@ class ModelExtensionDExportImportExport extends Model
                             if (empty($sheet_setting['values'])) {
                                 $this->writer->writeSheetRow($sheet_setting['name'], $sheet_row, $styles);
                             } else {
-                                if (isset($sheet_row[$sheet_setting['table']['key']])) {
+                                $sheet_table_column = $sheet_setting['table']['name'].'_'.$sheet_setting['table']['key'];
+
+                                if (isset($sheet_row[$sheet_table_column])) {
                                     $filter_data_values = array(
-                                        'filter_key' => $sheet_row[$sheet_setting['table']['key']]
+                                        'filter_key' => $sheet_row[$sheet_table_column]
                                         );
                                 } else {
                                     $filter_data_values = array();
@@ -430,7 +432,7 @@ class ModelExtensionDExportImportExport extends Model
                 }
             }
         }
-
+        
         if (count($implode) > 0) {
             $sql .= " WHERE ".implode(' AND ', $implode);
         }
@@ -455,7 +457,7 @@ class ModelExtensionDExportImportExport extends Model
 
             $sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
         }
-
+        
         $query = $this->db->query($sql);
 
         $export_data = $query->rows;
