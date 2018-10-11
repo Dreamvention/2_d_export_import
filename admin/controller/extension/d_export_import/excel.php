@@ -18,6 +18,7 @@ class ControllerExtensionDExportImportExcel extends Controller {
         $this->load->language($this->route);
         $this->load->language('extension/module/'.$this->codename);
         
+        $this->d_admin_style = (file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_admin_style.json'));
         $this->d_shopunity = (file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_shopunity.json'));
         $this->extension = json_decode(file_get_contents(DIR_SYSTEM.'library/d_shopunity/extension/'.$this->codename.'.json'), true);
         $this->store_id = (isset($this->request->get['store_id'])) ? $this->request->get['store_id'] : 0;
@@ -41,6 +42,11 @@ class ControllerExtensionDExportImportExcel extends Controller {
         $this->document->addScript("view/javascript/d_export_import/d_export_import.js");
         if($this->d_shopunity) {
             $this->document->addScript('view/javascript/d_shopunity/d_shopunity_widget.js');
+        }
+
+        if($this->d_admin_style) {
+            $this->load->model('extension/d_admin_style/style');
+            $this->model_extension_d_admin_style_style->getAdminStyle('light');
         }
 
         // styles and scripts

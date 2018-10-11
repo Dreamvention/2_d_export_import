@@ -12,6 +12,8 @@ $_['text_error_title']      = 'Error';
 $_['text_pleas_wait']       = 'Please Wait...';
 $_['text_filter_title']     = 'Filter';
 $_['text_not_selected']     = 'Filters not selected';
+$_['text_prepare_import']   = 'Preparing import';
+$_['text_prepare_export']   = 'Preparing export';
 
 $_['text_equal']            = '= (Equal)';
 $_['text_not_equal']        = '<> (Not equal)';
@@ -33,3 +35,4 @@ $_['entry_source']          = 'Source';
 $_['entry_language']        = 'Language';
 
 $_['error_validate']        = 'The file structure does not match the selected type';
+$_['error_files_empty']     = 'Allowed files not founds';

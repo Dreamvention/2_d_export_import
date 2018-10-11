@@ -21,6 +21,7 @@ class ControllerExtensionDExportImportSetting extends Controller {
         $this->d_shopunity = (file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_shopunity.json'));
         $this->extension = json_decode(file_get_contents(DIR_SYSTEM.'library/d_shopunity/extension/'.$this->codename.'.json'), true);
         $this->store_id = (isset($this->request->get['store_id'])) ? $this->request->get['store_id'] : 0;
+        $this->d_admin_style = (file_exists(DIR_SYSTEM.'library/d_shopunity/extension/d_admin_style.json'));
 
     }
 
@@ -50,6 +51,11 @@ class ControllerExtensionDExportImportSetting extends Controller {
         
         $this->document->addScript('view/javascript/shopunity/bootstrap-switch/bootstrap-switch.min.js');
         $this->document->addStyle('view/stylesheet/shopunity/bootstrap-switch/bootstrap-switch.css');
+
+        if($this->d_admin_style) {
+            $this->load->model('extension/d_admin_style/style');
+            $this->model_extension_d_admin_style_style->getAdminStyle('light');
+        }
 
         // Add more styles, links or scripts to the project is necessary
         $url_params = array();

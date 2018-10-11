@@ -21,6 +21,8 @@ class ModelExtensionDExportImportExport extends Model
             mkdir(DIR_CACHE.$this->codename.'/', 0777);
         }
 
+        $this->updateProgress(0, 0);
+
         $cache = 'ei_export';
 
         $this->load->model('extension/module/'.$this->codename);
@@ -53,10 +55,7 @@ class ModelExtensionDExportImportExport extends Model
             }
 
             if (!isset($this->session->data['ei_export_progress'])) {
-                $files = glob(DIR_CACHE.$this->codename."/*");
-                if ($files) {
-                    array_map('unlink', $files);
-                }
+                $this->clearFolder(DIR_CACHE.$this->codename);
 
                 if (!empty($this->module_setting['events_export_before'])) {
                     foreach ($this->module_setting['events_export_before'] as $action) {
@@ -109,9 +108,11 @@ class ModelExtensionDExportImportExport extends Model
                 $j = 0;
 
                 foreach ($main_sheet_data as $main_sheet_row) {
-                    if (isset($main_sheet_row[$this->module_setting['main_sheet']['table']['key']])) {
+                    $column_name = $this->module_setting['main_sheet']['table']['name'].'_'.$this->module_setting['main_sheet']['table']['key'];
+
+                    if (isset($main_sheet_row[$column_name])) {
                         $filter_data_secondary = array(
-                            'filter_key' => $main_sheet_row[$this->module_setting['main_sheet']['table']['key']]
+                            'filter_key' => $main_sheet_row[$column_name]
                             );
                     }
 
@@ -231,11 +232,16 @@ class ModelExtensionDExportImportExport extends Model
 
     public function updateProgress($current, $count)
     {
-        $progress_data = array(
-            'progress' => $count ? round($current / $count * 100, 3) : 100,
-            'current' => $current,
-            'memory_usaged' => $this->getUsageMemory()
+        if ($count) {
+            $progress_data = array(
+                'progress' => $count ? round($current / $count * 100, 3) : 100,
+                'current' => $current,
+                'memory_usaged' => $this->getUsageMemory()
             );
+        } else {
+            $progress_data = $this->language->get('text_prepare_export');
+        }
+
         if (file_exists(DIR_APPLICATION.'view/javascript/'.$this->codename.'/progress_info.json')) {
             if (is_writable(DIR_APPLICATION.'view/javascript/'.$this->codename.'/progress_info.json')) {
                 file_put_contents(DIR_APPLICATION.'view/javascript/'.$this->codename.'/progress_info.json', json_encode($progress_data));
@@ -309,11 +315,8 @@ class ModelExtensionDExportImportExport extends Model
         }
 
         $zip->close();
-        
-        $files = glob(DIR_CACHE.$this->codename."/*.xlsx");
-        if ($files) {
-            array_map('unlink', $files);
-        }
+
+        $this->clearFolder(DIR_CACHE.$this->codename);
 
         header('Pragma: public');
         header('Expires: 0');
@@ -336,10 +339,10 @@ class ModelExtensionDExportImportExport extends Model
             if (!empty($column['concat'])) {
                 $table = $this->getTableByName($column['table'], $setting);
                 if (!empty($table)) {
-                    $implode[] = "( SELECT GROUP_CONCAT(".$column['column']." SEPARATOR ',') FROM `".DB_PREFIX.$table['full_name']."` WHERE `".$table['key']."` = `".$setting['table']['name']."`.`".$setting['table']['key']."` ) as ".$column['column'];
+                    $implode[] = "( SELECT GROUP_CONCAT(".$column['column']." SEPARATOR ',') FROM `".DB_PREFIX.$table['full_name']."` WHERE `".$table['key']."` = `".$setting['table']['name']."`.`".$setting['table']['key']."` ) as ".$column['table'].'_'.$column['column'];
                 }
             } else {
-                $implode[] = $column['table'].'.'.$column['column'];
+                $implode[] = $column['table'].'.'.$column['column'].' as '.$column['table'].'_'.$column['column'];
             }
         }
 
@@ -543,14 +546,50 @@ class ModelExtensionDExportImportExport extends Model
         $json['errno'] = $errno;
         $json['errfile'] = $errfile;
         $json['errline'] = $errline;
-        $files = glob(DIR_CACHE."d_export_import/*");
-        if($files) {
-            array_map('unlink', $files);
-        }
+
+        self::clearFolderStatic(DIR_CACHE."d_export_import");
 
         header('Content-Type: application/json');
         echo json_encode($json);
         exit();
+    }
+
+    public function clearFolder($dir)
+    {
+        $files = array_diff(scandir($dir), array('.', '..'));
+
+        foreach ($files as $file) {
+            if(is_dir("$dir/$file")) {
+                self::delTree("$dir/$file");
+            } else {
+                unlink("$dir/$file");
+            }
+        }
+
+        return true;
+    }
+
+    public static function clearFolderStatic($dir)
+    {
+        $files = array_diff(scandir($dir), array('.', '..'));
+
+        foreach ($files as $file) {
+            if(is_dir("$dir/$file")) {
+                self::delTree("$dir/$file");
+            } else {
+                unlink("$dir/$file");
+            }
+        }
+
+        return true;
+    }
+
+    public static function delTree($dir) {
+        $files = array_diff(scandir($dir), array('.','..'));
+        foreach ($files as $file) {
+            (is_dir("$dir/$file")) ? self::delTree("$dir/$file") : unlink("$dir/$file");
+        }
+        return rmdir($dir);
     }
 
 
@@ -558,7 +597,7 @@ class ModelExtensionDExportImportExport extends Model
     {
         $last_error = error_get_last();
         if ($last_error['type'] === E_ERROR) {
-            $this->customErrorHandler(E_ERROR, $last_error['message'], $last_error['file'], $last_error['line']);
+            self::customErrorHandler(E_ERROR, $last_error['message'], $last_error['file'], $last_error['line']);
         }
     }
 }
