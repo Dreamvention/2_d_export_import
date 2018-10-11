@@ -37,6 +37,7 @@ class ModelExtensionDExportImportImport extends Model
 
     public function prepare_upload_file()
     {
+
         $this->updateProgress(0, 0);
 
         if (!file_exists(DIR_CACHE . $this->codename . '/')) {
@@ -56,22 +57,27 @@ class ModelExtensionDExportImportImport extends Model
 
             if ($ext == 'zip') {
                 $zip = new ZipArchive;
+
                 if ($zip->open($target) === true) {
+
                     $zip->extractTo(DIR_CACHE . $this->codename . '/');
                     $zip->close();
                     unlink($target);
                 } else {
+
                     return false;
                 }
             }
         } else {
             return false;
         }
+
         return true;
     }
 
     public function import($type, $language_id)
     {
+
         $json = array();
 
         set_time_limit(1800);

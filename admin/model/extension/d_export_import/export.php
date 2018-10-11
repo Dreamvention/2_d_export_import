@@ -316,8 +316,6 @@ class ModelExtensionDExportImportExport extends Model
 
         $zip->close();
 
-        $this->clearFolder(DIR_CACHE.$this->codename);
-
         header('Pragma: public');
         header('Expires: 0');
         header('Content-Description: File Transfer');
@@ -327,6 +325,8 @@ class ModelExtensionDExportImportExport extends Model
 
         readfile($temp);
         unlink($temp);
+
+        $this->clearFolder(DIR_CACHE.$this->codename);
     }
 
     public function getData($setting, $language_id, $data = array())
