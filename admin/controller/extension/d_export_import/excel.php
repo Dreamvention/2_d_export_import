@@ -107,6 +107,8 @@ class ControllerExtensionDExportImportExcel extends Controller {
         $json['translate']['button_close'] = $this->language->get('button_close');
         $data['button_cancel'] = $this->language->get('button_cancel');
 
+        $data['text_complete_version'] = $this->language->get('text_complete_version');
+
         $data['module_link'] = $this->model_extension_d_opencart_patch_url->link($this->route);
         $data['action'] = $this->model_extension_d_opencart_patch_url->link($this->route.'/export');
 

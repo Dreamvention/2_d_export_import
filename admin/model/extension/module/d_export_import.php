@@ -107,10 +107,6 @@ class ModelExtensionModuleDExportImport extends Model {
         $data['tabs'] = array();
         $icons =array('excel'=> 'fa fa-file-excel-o', 'setting' => 'fa fa-cog');
 
-        $data['text_complete_version'] = $this->language->get('text_complete_version');
-
-        $data['notify'] = $this->checkCompleteVersion();
-
         foreach ($tabs as $tab) {
             $this->load->language('extension/'.$this->codename.'/'.$tab);
 

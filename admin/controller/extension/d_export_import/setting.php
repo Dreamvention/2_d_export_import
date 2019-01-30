@@ -97,6 +97,10 @@ class ControllerExtensionDExportImportSetting extends Controller {
         $data['button_save_and_stay'] = $this->language->get('button_save_and_stay');
         $data['button_cancel'] = $this->language->get('button_cancel');
 
+        $data['text_complete_version'] = $this->language->get('text_complete_version');
+
+        $data['notify'] = $this->{'model_extension_module_'.$this->codename}->checkCompleteVersion();
+
         $data['module_link'] =  $this->model_extension_d_opencart_patch_url->link($this->route);
         $data['action'] =  $this->model_extension_d_opencart_patch_url->link($this->route, $url);
         

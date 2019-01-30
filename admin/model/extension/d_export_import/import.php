@@ -181,6 +181,8 @@ class ModelExtensionDExportImportImport extends Model
         if ($this->reader->valid()) {
             do {
                 $values = $this->reader->current();
+                echo '<pre>'; print_r($values); echo '</pre>';
+                exit;
                 $this->prepareTables($sheet_setting);
                 if (array_filter($values)) {
                     $main_sheet = ($sheet_index == 0) ? true : false;
