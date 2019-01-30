@@ -1,6 +1,6 @@
 {
     "codename": "d_export_import",
-    "version": "2.1.8",
+    "version": "2.1.10",
     "name": "Export Import",
     "description": "This is the base for your tipical module. Use  this as a guide to make an awesome module.",
     "index": "extension/module/d_export_import",
@@ -45,7 +45,8 @@
     "required": {
         "d_opencart_patch": ">= 1.0.0",
         "d_riot": ">= 3.5.0",
-        "d_twig_manager": ">= 1.4.1"
+        "d_twig_manager": ">= 1.4.1",
+        "d_admin_style": ">= 1.0.5"
     },
     "files": [
         "admin/controller/extension/module/d_export_import.php",
@@ -74,6 +75,13 @@
         "system/library/SpreadsheetReader"
     ],
     "changelog": [
+        {	
+            "varsion": "2.1.10",	
+            "change": "Fix bug for clear folder. Added admin style. Added support OC 3.0.3.1"
+        },        {	
+            "varsion": "2.1.9",	
+            "change": "Fix bugs"	
+        },
         {
             "varsion": "2.1.8",
             "change": "Added filter for concat values"
