@@ -1,6 +1,6 @@
 {
     "codename": "d_export_import",
-    "version": "2.1.11",
+    "version": "2.1.12",
     "name": "Export Import",
     "description": "This is the base for your tipical module. Use  this as a guide to make an awesome module.",
     "index": "extension/module/d_export_import",
@@ -29,7 +29,8 @@
         "d_opencart_patch": ">= 1.0.0",
         "d_riot": ">= 3.5.0",
         "d_twig_manager": ">= 1.4.1",
-        "d_admin_style": ">= 1.0.5"
+        "d_admin_style": ">= 1.0.5",
+        "d_validator": ">=1.0.2"
     },
     "files": [
         "admin/controller/extension/module/d_export_import.php",
@@ -58,6 +59,10 @@
         "system/library/SpreadsheetReader"
     ],
     "changelog": [
+        {
+            "varsion": "2.1.12",
+            "change": "Validator dependency"
+        },
         {
             "varsion": "2.1.11",
             "change": "sem var"
