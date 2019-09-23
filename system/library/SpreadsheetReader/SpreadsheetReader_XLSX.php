@@ -488,7 +488,7 @@ class SpreadsheetReader_XLSX implements Iterator, Countable
                 case 't':
                 if ($this -> SharedStrings -> nodeType == XMLReader::END_ELEMENT)
                 {
-                    continue;
+                    continue 2;
                 }
                 $CacheValue .= $this -> SharedStrings -> readString();
                 break;
@@ -623,7 +623,7 @@ class SpreadsheetReader_XLSX implements Iterator, Countable
                     case 't':
                     if ($this -> SharedStrings -> nodeType == XMLReader::END_ELEMENT)
                     {
-                        continue;
+                        continue 2;
                     }
                     $Value .= $this -> SharedStrings -> readString();
                     break;
@@ -1091,7 +1091,7 @@ class SpreadsheetReader_XLSX implements Iterator, Countable
                             // If it is a closing tag, skip it
                     if ($this -> Worksheet -> nodeType == XMLReader::END_ELEMENT)
                     {
-                        continue;
+                        continue 2;
                     }
 
                     $StyleId = (int)$this -> Worksheet -> getAttribute('s');
@@ -1125,7 +1125,7 @@ class SpreadsheetReader_XLSX implements Iterator, Countable
                     case 'is':
                     if ($this -> Worksheet -> nodeType == XMLReader::END_ELEMENT)
                     {
-                        continue;
+                        continue 2;
                     }
 
                     $Value = $this -> Worksheet -> readString();

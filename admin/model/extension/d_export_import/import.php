@@ -477,7 +477,9 @@ class ModelExtensionDExportImportImport extends Model
                         }
                     }
 
-                    $implode[] = "`" . $main_key_name . "` = '" . (isset($table_setting['prefix']) ? $table_setting['prefix'] : '') . $main_key . (isset($table_setting['postfix']) ? $table_setting['postfix'] : '') . "'";
+                    if ($main_key != '') {
+                        $implode[] = "`" . $main_key_name . "` = '" . (isset($table_setting['prefix']) ? $table_setting['prefix'] : '') . $main_key . (isset($table_setting['postfix']) ? $table_setting['postfix'] : '') . "'";
+                    }
 
                     if (count($implode) > 1) {
                         $sql .= implode(' , ', $implode);
@@ -487,12 +489,18 @@ class ModelExtensionDExportImportImport extends Model
                         }
 
                         $this->db->query($sql);
+
+                        if($main_key == '') {
+                          $this->main_key = $this->db->getLastId();
+                        }
                     }
                 }
             } else {
-                $sql = " DELETE FROM `" . DB_PREFIX . $table_setting['full_name'] . "` WHERE `" . $this->main_key_name . "` = " . $this->main_key;
+                if ($this->main_key !== '') {
+                    $sql = " DELETE FROM `" . DB_PREFIX . $table_setting['full_name'] . "` WHERE `" . $this->main_key_name . "` = " . $this->main_key;
 
-                $this->db->query($sql);
+                    $this->db->query($sql);
+                }
 
                 $rows = array();
 
@@ -514,7 +522,6 @@ class ModelExtensionDExportImportImport extends Model
                         $rows[$row_index][$column_name] = $row;
                     }
                 }
-
                 foreach ($rows as $columns) {
                     $sql = "INSERT INTO `" . DB_PREFIX . $this->tables[$table_name]['full_name'] . "` SET ";
 
