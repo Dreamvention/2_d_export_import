@@ -1,6 +1,6 @@
 {
     "codename": "d_export_import",
-    "version": "2.1.14",
+    "version": "2.1.13",
     "name": "Export Import",
     "description": "This is the base for your tipical module. Use  this as a guide to make an awesome module.",
     "index": "extension/module/d_export_import",
@@ -60,12 +60,8 @@
     ],
     "changelog": [
         {
-          "version": "2.1.14",
-          "change": "Validation fixed when saving settings"
-        },
-        {
           "version": "2.1.13",
-          "change": "Fix bugs"
+          "change": "Validation fixed when saving settings. Import corrected with empty product ID"
         },
         {
             "varsion": "2.1.12",
