@@ -59,6 +59,9 @@
                         <label class="control-label col-sm-2"><span data-toggle="tooltip" title="{{help_limit_step}}">{{entry_limit_step}}</span></label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" name="{{codename}}_setting[limit_step]" value="{{setting.limit_step}}"/>
+                            {% if error.limit_step %}
+                                <div class="text-danger">{{error.limit_step}}</div>
+                            {% endif %}
                         </div>
                     </div>
                     <div class="form-group">

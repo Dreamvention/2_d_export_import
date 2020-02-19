@@ -171,10 +171,18 @@ class ControllerExtensionDExportImportSetting extends Controller {
             return false;
         }
 
-        if(empty($this->request->post['limit_step'])){
-            $this->error['limit_step'] = $this->language->get('error_limit_step');
+        if(!isset($this->request->post[$this->codename . '_setting']['limit_step'])){
+          $this->error['limit_step'] = $this->language->get('error_limit_step');
+        } elseif(!is_numeric($this->request->post[$this->codename . '_setting']['limit_step'])) {
+          $this->error['limit_step'] = $this->language->get('error_limit_step_numeric');
+        } elseif ($this->request->post[$this->codename . '_setting']['limit_step'] <= 0) {
+          $this->error['limit_step'] = $this->language->get('error_limit_step_value');
         }
-        
+
+        if($this->error) {
+          return false;
+        }
+
         return true;
     }
 }
