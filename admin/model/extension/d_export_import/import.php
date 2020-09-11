@@ -670,7 +670,7 @@ class ModelExtensionDExportImportImport extends Model
     public static function fatal_error_shutdown_handler()
     {
         $last_error = error_get_last();
-        if ($last_error['type'] === E_ERROR) {
+        if ($last_error && $last_error['type'] === E_ERROR) {
             ModelExtensionDExportImportImport::customErrorHandler(E_ERROR, $last_error['message'], $last_error['file'], $last_error['line']);
             exit();
         }

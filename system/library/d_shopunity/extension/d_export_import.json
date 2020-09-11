@@ -1,6 +1,6 @@
 {
     "codename": "d_export_import",
-    "version": "2.1.13",
+    "version": "2.1.14",
     "name": "Export Import",
     "description": "This is the base for your tipical module. Use  this as a guide to make an awesome module.",
     "index": "extension/module/d_export_import",
@@ -59,6 +59,10 @@
         "system/library/SpreadsheetReader"
     ],
     "changelog": [
+        {
+          "version": "2.1.14",
+          "change": "Fix for opencart 3.0.3.6"
+        },
         {
           "version": "2.1.13",
           "change": "Validation fixed when saving settings. Import corrected with empty product ID"

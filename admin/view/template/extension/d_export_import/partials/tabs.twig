@@ -1,7 +1,7 @@
 <ul class="nav nav-tabs">
     {% for tab in tabs %}
-        <li class="{{tab.active?'active'}}">
-            <a {{not tab.active? 'href="'~tab.href~'"'}}>
+        <li class="{{tab.active?'active': ''}}">
+            <a {{tab.active? '' : 'href="'~tab.href~'"'}}>
                 <span  class="{{tab.icon}}"></span> {{tab.title}}
             </a>
         </li>
