@@ -6,7 +6,8 @@ $_['opencart_version'] = array(
     "3.0.2.0",
     "3.0.3.1",
     "3.0.3.2",
-    "3.0.3.3");
+    "3.0.3.3",
+    "3.0.3.6");
 $_['main_sheet'] = array(
     'name' => 'Products',
     'event_export' => array(
