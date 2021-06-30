@@ -1,6 +1,6 @@
 {
     "codename": "d_export_import",
-    "version": "2.1.15",
+    "version": "2.1.16",
     "name": "Export Import",
     "description": "This is the base for your tipical module. Use  this as a guide to make an awesome module.",
     "index": "extension/module/d_export_import",
@@ -60,9 +60,13 @@
     ],
     "changelog": [
         {
+            "version": "2.1.16",
+            "change": "3037 support added"
+        },
+        {
             "version": "2.1.15",
             "change": "3036 support added"
-          },
+        },
         {
           "version": "2.1.14",
           "change": "Fix for opencart 3.0.3.6"
